@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%--<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>--%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -17,7 +17,7 @@
             <table>
                 <tr>
                     <td>Product Name</td>
-                    <td><input type="text" name="prodName"></td>
+                    <td><input type="text" name="prodId"></td>
                 </tr>
                 <tr>
                     <td>Qty</td>
@@ -29,13 +29,13 @@
             </table>
         </form>
 <!--        <table border="1">
-            <c:forEach items="DVD" var="dvdItem">
+            <% getServletContext().setAttribute("prefixIndex",5); %>
+
+            <c:forEach items="catalogTest" var="catalog">
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>${catalog.seqID}</td>
+                    <td>${catalog.dvdRate}</td>
+                    <td>${catalog.stockQty}</td>
                 <tr>
             </c:forEach>    
         </table>-->

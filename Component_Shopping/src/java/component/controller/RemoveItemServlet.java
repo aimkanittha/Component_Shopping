@@ -5,6 +5,7 @@
  */
 package component.controller;
 
+import component.ConstantsCtrl;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -31,7 +32,8 @@ public class RemoveItemServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            
+            String prod_QtyStr = request.getParameter(ConstantsCtrl.PRODUCT_QTY);
+            Integer prod_Qty = Integer.parseInt(prod_QtyStr == "" ? "0" : prod_QtyStr);
         }
     }
 

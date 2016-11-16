@@ -13,10 +13,11 @@ package component;
 public class ConstantsCtrl {
     
     // AddtoShoppingCartServlet
-    public static final String PRODUCT_NAME = "prodName"; // User input
+    public static String PRODUCT_ID = "prodId"; // User input
+    public static final String PREFIX_INDEX = "prefixIndex";
     public static final String PRODUCT_QTY = "prodQty"; // User input
     public static final String DVD = "dvd";
     public static final String CART = "cart";
     public static final String ShowShoppingCart_JSP = "ShowShoppingCart.jsp";
-
+    
 }
