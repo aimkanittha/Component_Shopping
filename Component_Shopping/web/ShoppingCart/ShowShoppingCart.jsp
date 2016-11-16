@@ -28,7 +28,7 @@
                 </tr>
             </table>
         </form>
-<!--        <table border="1">
+        <table border="1">
             <c:forEach items="DVD" var="dvdItem">
                 <tr>
                     <td></td>
@@ -38,6 +38,6 @@
                     <td></td>
                 <tr>
             </c:forEach>    
-        </table>-->
+        </table>
     </body>
 </html>
