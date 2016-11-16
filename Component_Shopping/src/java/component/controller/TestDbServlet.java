@@ -7,7 +7,10 @@ package component.controller;
 
 import component.dao.MemberTable;
 import component.dao.MemberTableLocal;
+import component.dao.ShoppingBillTable;
+import component.dao.ShoppingBillTableLocal;
 import component.model.MemberShop;
+import component.model.ShoppingBill;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -25,10 +28,11 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author wachirapong
  */
-@Stateless
+
 public class TestDbServlet extends HttpServlet {
-//    @EJB
-//    MemberTableLocal member;
+
+    ShoppingBillTableLocal shoppingBillTable;
+    MemberTableLocal member;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -43,19 +47,21 @@ public class TestDbServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 //        catalog.getString();
 //        member = new MemberTable();
-EntityManagerFactory emf = Persistence.createEntityManagerFactory("Component_ShoppingPU");
-            EntityManager em = emf.createEntityManager();
-            List<MemberShop> dvd_list = (List<MemberShop>)em.createNamedQuery("MemberShop.findAll").getResultList();
+        member = new MemberTable();
+        ShoppingBill sb = new ShoppingBill(2);
+        sb.setShoppingBilltotal(200.00);
+        shoppingBillTable = new ShoppingBillTable();
+        shoppingBillTable.persist(sb);
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>"+"Servlet TestDbServlet"+dvd_list.size()+"</title>");            
+            out.println("<title>"+member.getCount()+"Servlet TestDbServlet"+"</title>");            
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet TestDbServlet at " + request.getContextPath() + " </h1>");
-            out.println(dvd_list.size()+"<br>");
+            out.println("<br>"+member.getCount());
             out.println("</body>");
             out.println("</html>");
         }

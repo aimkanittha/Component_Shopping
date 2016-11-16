@@ -5,39 +5,22 @@
  */
 package component.dao;
 
+import component.model.ShoppingBill;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
 
 /**
  *
  * @author wachirapong
  */
 @Stateless
-public class MemberTable implements MemberTableLocal{
+public class ShoppingBillTable implements ShoppingBillTableLocal {
 
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("Component_ShoppingPU");
-//    @PersistenceContext(unitName="Component_ShoppingPU")
-//    private EntityManager em;
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
-
-//    @Override
-    public int getCount() {
-        EntityManager em = emf.createEntityManager();
-        return em.createNamedQuery("MemberShop.findAll").getResultList().size();
-    }
-    
-    @Inject
-    public MemberTable() {
-
-    }
-    
 
     public void persist(Object object) {
         EntityManager em = emf.createEntityManager();
@@ -52,12 +35,9 @@ public class MemberTable implements MemberTableLocal{
             em.close();
         }
     }
-
-    @Override
-    public Boolean getMemberByUsername(String Username) {
-        return null;
-    }
-
-   
     
+    
+    // Add business logic below. (Right-click in editor and choose
+    // "Insert Code > Add Business Method")
+
 }

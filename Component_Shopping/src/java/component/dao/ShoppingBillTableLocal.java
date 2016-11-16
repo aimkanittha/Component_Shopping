@@ -5,6 +5,7 @@
  */
 package component.dao;
 
+import component.model.ShoppingBill;
 import javax.ejb.Local;
 
 /**
@@ -12,10 +13,7 @@ import javax.ejb.Local;
  * @author wachirapong
  */
 @Local
-public interface MemberTableLocal {
+public interface ShoppingBillTableLocal {
 
-    int getCount();
-
-    Boolean getMemberByUsername(String Username);
-    
+    void persist(Object object);
 }
