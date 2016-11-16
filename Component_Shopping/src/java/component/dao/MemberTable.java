@@ -5,6 +5,8 @@
  */
 package component.dao;
 
+import component.model.MemberShop;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
@@ -12,7 +14,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -54,8 +56,14 @@ public class MemberTable implements MemberTableLocal{
     }
 
     @Override
-    public Boolean getMemberByUsername(String Username) {
-        return null;
+    public MemberShop getMemberByUsername(String Username) {
+        EntityManager em = emf.createEntityManager();
+        List<MemberShop>list = em.createNamedQuery("MemberShop.findByMemberusername").setParameter("memberusername", Username).getResultList();
+        if(list.size() == 0)
+            return null;
+        TypedQuery<MemberShop> query = em.createNamedQuery("MemberShop.findByMemberusername", MemberShop.class);
+        query.setParameter("memberusername", Username);
+        return query.getSingleResult();
     }
 
    

@@ -4,6 +4,7 @@
     Author     : USER
 --%>
 
+<%@page import="component.model.MemberShop"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%--<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>--%>
 <!DOCTYPE html>
@@ -13,6 +14,12 @@
         <title>ShowShoppingCart</title>
     </head>
     <body>
+        <%
+            MemberShop ms = ((MemberShop) request.getSession().getAttribute("member"));
+            out.print("Hello   "+ms.getMemberfirstname()+"    ");
+            out.print(ms.getMemberlastname());
+        %>
+        <!--<a href=""></a>-->
         <form action="/addItem" method="POST">
             <table>
                 <tr>

@@ -3,49 +3,60 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package component.controller;
 
-import component.ConstantsCtrl;
-import component.model.*;
-
+import component.dao.MemberTable;
+import component.dao.MemberTableLocal;
+import component.model.MemberShop;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import component.dao.DvdDataTableLocal;
-import component.dao.DvdDataTable;
-import java.util.List;
-import javax.ejb.EJB;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 /**
  *
- * @author USER
+ * @author wachirapong
  */
-@WebServlet(urlPatterns = {"/showData"})
-public class ShowData extends HttpServlet {
-//    @EJB
-    DvdDataTableLocal dvd;
+public class LoginController extends HttpServlet {
+    MemberTableLocal memberTable;
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("Component_ShoppingPU");
-        EntityManager em = emf.createEntityManager();
-        List<DvdData> dvd_list = (List<DvdData>)em.createNamedQuery("DvdData.findAll").getResultList();
-        try (PrintWriter out = response.getWriter()) {
-            
-            getServletContext().setAttribute("dvdItems", dvd_list);
-            request.setAttribute("dvdName", dvd_list.get(0).getDvdDataname());
-        request.getRequestDispatcher("/ShoppingCart/ShowShoppingCart.jsp").forward(request, response);
-//        response.sendRedirect(request.getContextPath() + "/ShowShoppingCart.jsp");
+        response.setContentType("text/html");
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        if( username != null ){
+            memberTable = new MemberTable();
+            MemberShop member;
+            member = memberTable.getMemberByUsername(username);
+            if( member != null ){
+                if( password.equals(member.getMemberpassword()) ){
+                    request.getSession().setAttribute("member", member);
+                    response.sendRedirect("showData");
+                }else{
+                    request.getSession().setAttribute("userinvalid", 1);
+                    request.getRequestDispatcher("Login/Login.jsp").forward(request, response);
+                }
+            }else{
+                request.getSession().setAttribute("userinvalid", 1);
+                request.getRequestDispatcher("Login/Login.jsp").forward(request, response);
+            }
+        }else{
+            request.getSession().setAttribute("userinvalid", 0);
+            request.getRequestDispatcher("Login/Login.jsp").forward(request, response);
         }
+        
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

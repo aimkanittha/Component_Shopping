@@ -5,6 +5,7 @@
  */
 package component.dao;
 
+import component.model.MemberShop;
 import javax.ejb.Local;
 
 /**
@@ -16,6 +17,6 @@ public interface MemberTableLocal {
 
     int getCount();
 
-    Boolean getMemberByUsername(String Username);
+    MemberShop getMemberByUsername(String Username);
     
 }
