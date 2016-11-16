@@ -12,50 +12,52 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+
+import component.model.*;
 
 import component.ConstantsCtrl;
-import component.model.Catalog;
+//import component.model.Catalog;
+//import javax.ejb.EJB;
 /**
  *
  * @author USER
  */
 public class AddtoShoppingCartServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-
+    // @EJB
+    // private CatalogDAOLocal ICatalog;
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            String prod_Name = request.getParameter(ConstantsCtrl.PRODUCT_NAME);
+            String prod_id = request.getParameter("prodId");
+//            Integer prefixIndex = (Integer) getServletContext().getAttribute(ConstantsCtrl.PREFIX_INDEX);
+            
             String prod_QtyStr = request.getParameter(ConstantsCtrl.PRODUCT_QTY);
             Integer prod_Qty = Integer.parseInt(prod_QtyStr == "" ? "0" : prod_QtyStr);
+            boolean isEmpty = false;
             
-            Integer stock_Qoh, cart_Qoh, newStock_Qoh;
-//            Catalog catalogObj = new Catalog();
-            // DVD dvdObj = new DVD();
+            
+            int stock_Qoh, cart_Qoh, newStock_Qoh;
             // CART cartObj = new CART();
-            HttpSession session = request.getSession();
+//            HttpSession session = request.getSession();
             Random rand = new Random();
             
             synchronized(getServletContext()) {
             
-            stock_Qoh = 0;// DVD.getStockQoh
+            stock_Qoh = 0;// DVD.getStockQoh()
             cart_Qoh = 0; // ShoppingCart.getCartQoh
-            newStock_Qoh = (stock_Qoh - prod_Qty) <= 0 ? 0: stock_Qoh - prod_Qty;
             
-             getServletContext().setAttribute(ConstantsCtrl.PRODUCT_NAME, "5555555555555555");
+            if((stock_Qoh - prod_Qty) < 0) {
+                isEmpty = true;
+            }
+            newStock_Qoh = (stock_Qoh - prod_Qty) <= 0 ? 0: stock_Qoh - prod_Qty; // For check warning
+            
+            
+//             getServletContext().setAttribute(ConstantsCtrl.PRODUCT_NAME, "5555555555555555");
             Thread.sleep((rand.nextInt(10)+1) * 500);
-             getServletContext().setAttribute(ConstantsCtrl.PRODUCT_QTY, 5);
+//             getServletContext().setAttribute(ConstantsCtrl.PRODUCT_QTY, 5);
             //dvdObj.setStock_Qoh() 
             //getServletContext().setAttribute(ConstantsCtrl.DVD, dvdObj);
             
@@ -64,21 +66,21 @@ public class AddtoShoppingCartServlet extends HttpServlet {
             // SHOW CART
             //getServletContext().setAttribute(ConstantsCtrl.CART, cartObj.getTotalQty);
             }
-            
-//            request.getRequestDispatcher(ConstantsCtrl.ShowShoppingCart_JSP).forward(request, response);
-            
+                        
             out.println("<!DOCTYPE html>");
             out.println("<html>");
-            out.println("<head>");
             out.println("<title>Servlet CheckOutServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>USER INPUT " + prod_Name + " " + prod_Qty + "    =>stock " + newStock_Qoh+ "</h1>");
-            out.println(getServletContext().getAttribute(ConstantsCtrl.PRODUCT_NAME)+"<br>");
-            out.println(getServletContext().getAttribute(ConstantsCtrl.PRODUCT_QTY));
+//            out.println(prefixIndex + "<br>");
+            out.println("<h1>Servlet CheckOutServlet at " + prod_id + prod_Qty + "    =>stock " + newStock_Qoh+ "</h1>");
+            out.println("<h1>USER INPUT " + prod_id + " " + prod_Qty + "    =>stock " + newStock_Qoh+ "</h1>");
+//            out.println(getServletContext().getAttribute(ConstantsCtrl.PRODUCT_ID)+"<br>");
+//            out.println(getServletContext().getAttribute(ConstantsCtrl.PRODUCT_QTY));
             out.println("</body>");
             out.println("</html>");
-            
+
+            request.getRequestDispatcher(ConstantsCtrl.ShowShoppingCart_JSP).forward(request, response);
         }catch(Exception e) {}
     }
 

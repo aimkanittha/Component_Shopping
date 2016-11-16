@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%--<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>--%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -13,7 +13,7 @@
         <title>ShowShoppingCart</title>
     </head>
     <body>
-        <form action="addItem" method="POST">
+        <form action="/addItem" method="POST">
             <table>
                 <tr>
                     <td>Product Name</td>
@@ -28,16 +28,20 @@
                 </tr>
             </table>
         </form>
-        <table border="1">
-            <c:forEach items="DVD" var="dvdItem">
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                <tr>
-            </c:forEach>    
-        </table>
+        <form action="/showData" method="POST">
+            <table border="1">
+                <c:forEach items="dvdItems" var="dvdItem">
+                    <tr>
+                        <td>aaaaaaaaaaa${dvdItem.dvdDataid}</td>
+                        <td>aaaaaaaaaa${dvdItem.dvdDataname}</td>
+                        <td>aaaaaaaaaaaaaaaaa${dvdItem.dvdDataprice}</td>
+                        <td>aaaaaaaaaaaaaa${dvdItem.dvdDatayear}</td>
+                        <td>aaaaaaaaa${dvdItem.dvdDataquantity}</td>
+                        <td>aaaaaaaaaa${dvdItem.dvdDatacatalog}</td>
+                        <td>aaaaaaaaaaa${dvdItem.catalogtypeName}</td>
+                    <tr>
+                </c:forEach>    
+            </table>
+        </form>
     </body>
 </html>

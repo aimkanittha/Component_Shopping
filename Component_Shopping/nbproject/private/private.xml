@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Users/USER/Documents/NetBeansProjects/Component_Shopping/Component_Shopping/nbproject/build-impl.xml</file>
+            <file>file:/C:/Users/USER/Documents/NetBeansProjects/Component_Shopping/Component_Shopping/src/java/component/model/Catalog.java</file>
+            <file>file:/C:/Users/USER/Documents/NetBeansProjects/Component_Shopping/Component_Shopping/web/WEB-INF/web.xml</file>
+            <file>file:/C:/Users/USER/Documents/NetBeansProjects/Component_Shopping/Component_Shopping/web/WEB-INF/glassfish-resources.xml</file>
+            <file>file:/C:/Users/USER/Documents/NetBeansProjects/Component_Shopping/Component_Shopping/src/conf/persistence.xml</file>
+            <file>file:/C:/Users/USER/Documents/NetBeansProjects/Component_Shopping/Component_Shopping/web/META-INF/context.xml</file>
+            <file>file:/C:/Users/USER/Documents/NetBeansProjects/Component_Shopping/Component_Shopping/src/java/component/model/DvdData.java</file>
+            <file>file:/C:/Users/USER/Documents/NetBeansProjects/Component_Shopping/Component_Shopping/web/index.html</file>
+            <file>file:/C:/Users/USER/Documents/NetBeansProjects/Component_Shopping/Component_Shopping/web/ShoppingCart/ShowShoppingCart.jsp</file>
+            <file>file:/C:/Users/USER/Documents/NetBeansProjects/Component_Shopping/Component_Shopping/src/java/component/model/MemberShop.java</file>
+            <file>file:/C:/Users/USER/Documents/NetBeansProjects/Component_Shopping/Component_Shopping/src/java/component/controller/CheckOutServlet.java</file>
+            <file>file:/C:/Users/USER/Documents/NetBeansProjects/Component_Shopping/Component_Shopping/src/java/component/controller/RemoveItemServlet.java</file>
+            <file>file:/C:/Users/USER/Documents/NetBeansProjects/Component_Shopping/Component_Shopping/src/java/component/controller/AddtoShoppingCartServlet.java</file>
+            <file>file:/C:/Users/USER/Documents/NetBeansProjects/Component_Shopping/Component_Shopping/src/java/component/dao/MemberTable.java</file>
+            <file>file:/C:/Users/USER/Documents/NetBeansProjects/Component_Shopping/Component_Shopping/src/java/component/controller/TestDbServlet.java</file>
+        </group>
+    </open-files>
+</project-private>

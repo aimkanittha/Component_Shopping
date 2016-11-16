@@ -15,8 +15,8 @@ public class ConstantsCtrl {
     // AddtoShoppingCartServlet
     public static final String PRODUCT_NAME = "prodName"; // User input
     public static final String PRODUCT_QTY = "prodQty"; // User input
-    public static final String DVD = "dvd";
+    public static final String DVD = "dvdItems";
     public static final String CART = "cart";
-    public static final String ShowShoppingCart_JSP = "ShowShoppingCart.jsp";
+    public static final String ShowShoppingCart_JSP = "ShoppingCart/ShowShoppingCart.jsp";
 
 }

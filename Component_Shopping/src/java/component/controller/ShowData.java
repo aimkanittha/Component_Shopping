@@ -3,37 +3,47 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package component.controller;
 
 import component.ConstantsCtrl;
+import component.model.*;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import component.dao.DvdDataTableLocal;
+import component.dao.DvdDataTable;
+import java.util.List;
+import javax.ejb.EJB;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 /**
  *
  * @author USER
  */
-public class RemoveItemServlet extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+@WebServlet(urlPatterns = {"/showData"})
+public class ShowData extends HttpServlet {
+//    @EJB
+    DvdDataTableLocal dvd;
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("Component_ShoppingPU");
+        EntityManager em = emf.createEntityManager();
+        List<DvdData> dvd_list = (List<DvdData>)em.createNamedQuery("DvdData.findAll").getResultList();
         try (PrintWriter out = response.getWriter()) {
-            String prod_QtyStr = request.getParameter(ConstantsCtrl.PRODUCT_QTY);
-            Integer prod_Qty = Integer.parseInt(prod_QtyStr == "" ? "0" : prod_QtyStr);
+            
+            getServletContext().setAttribute("dvdItems", dvd_list);
+        request.getRequestDispatcher("/ShoppingCart/ShowShoppingCart.jsp").forward(request, response);
+//        response.sendRedirect(request.getContextPath() + "/ShowShoppingCart.jsp");
         }
     }
 
