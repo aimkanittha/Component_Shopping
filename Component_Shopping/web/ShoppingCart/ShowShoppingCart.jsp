@@ -1,9 +1,3 @@
-<%-- 
-    Document   : ShowShoppingCart
-    Created on : Nov 16, 2016, 9:22:16 AM
-    Author     : USER
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%--<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>--%>
 <!DOCTYPE html>
@@ -13,7 +7,7 @@
         <title>ShowShoppingCart</title>
     </head>
     <body>
-        <form action="addItem" method="POST">
+<!--        <form action="addItem" method="POST">
             <table>
                 <tr>
                     <td>Product Name</td>
@@ -27,17 +21,22 @@
                     <td><a href="addItem"><input type="submit" name="addSubmit"></a></td>
                 </tr>
             </table>
+        </form>-->
+        <form action="showData" method="POST">
+            <table border="1">
+                <c:forEach items="dvdItems" var="dvdItem">
+                    <tr>
+                        <td>${dvdItem.dvdDataid}</td>
+                        <td>${dvdItem.dvdDataname}</td>
+                        <td>${dvdItem.dvdDataprice}</td>
+                        <td>${dvdItem.dvdDatayear}</td>
+                        <td>${dvdItem.dvdDataquantity}</td>
+                        <td>${dvdItem.dvdDatacatalog.catalogtypeName}</td>
+                    <tr>
+                </c:forEach>    
+            </table>
         </form>
-<!--        <table border="1">
-            <% getServletContext().setAttribute("prefixIndex",5); %>
-
-            <c:forEach items="catalogTest" var="catalog">
-                <tr>
-                    <td>${catalog.seqID}</td>
-                    <td>${catalog.dvdRate}</td>
-                    <td>${catalog.stockQty}</td>
-                <tr>
-            </c:forEach>    
-        </table>-->
+                    
+                    <a href="showData">555555555555555555555555</a>
     </body>
 </html>

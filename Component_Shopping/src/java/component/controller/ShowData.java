@@ -3,85 +3,58 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package component.controller;
+
+import component.ConstantsCtrl;
+import component.model.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Random;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import component.model.*;
-
-import component.ConstantsCtrl;
-//import component.model.Catalog;
-//import javax.ejb.EJB;
+import component.dao.DvdDataTableLocal;
+import component.dao.DvdDataTable;
+import java.util.List;
+import javax.ejb.EJB;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 /**
  *
  * @author USER
  */
-public class AddtoShoppingCartServlet extends HttpServlet {
-
-    // @EJB
-    // private CatalogDAOLocal ICatalog;
-    
+@WebServlet(urlPatterns = {"/showData"})
+public class ShowData extends HttpServlet {
+//    @EJB
+    DvdDataTableLocal dvd;
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("Component_ShoppingPU");
+        EntityManager em = emf.createEntityManager();
+        List<DvdData> dvd_list = (List<DvdData>)em.createNamedQuery("DvdData.findAll").getResultList();
         try (PrintWriter out = response.getWriter()) {
-            String prod_id = request.getParameter(ConstantsCtrl.PRODUCT_ID);
-//            Integer prefixIndex = (Integer) getServletContext().getAttribute(ConstantsCtrl.PREFIX_INDEX);
             
-            String prod_QtyStr = request.getParameter(ConstantsCtrl.PRODUCT_QTY);
-            Integer prod_Qty = Integer.parseInt(prod_QtyStr == "" ? "0" : prod_QtyStr);
-            boolean isEmpty = false;
+//            getServletContext().setAttribute(ConstantsCtrl.DVD, dvd.getAllDvd());
+//            request.getRequestDispatcher(ConstantsCtrl.ShowShoppingCart_JSP).forward(request, response);
             
-            
-            int stock_Qoh, cart_Qoh, newStock_Qoh;
-            // CART cartObj = new CART();
-//            HttpSession session = request.getSession();
-            Random rand = new Random();
-            
-            synchronized(getServletContext()) {
-            
-            stock_Qoh = 0;// DVD.getStockQoh()
-            cart_Qoh = 0; // ShoppingCart.getCartQoh
-            
-            if((stock_Qoh - prod_Qty) < 0) {
-                isEmpty = true;
-            }
-            newStock_Qoh = (stock_Qoh - prod_Qty) <= 0 ? 0: stock_Qoh - prod_Qty; // For check warning
-            
-            
-//             getServletContext().setAttribute(ConstantsCtrl.PRODUCT_NAME, "5555555555555555");
-            Thread.sleep((rand.nextInt(10)+1) * 500);
-//             getServletContext().setAttribute(ConstantsCtrl.PRODUCT_QTY, 5);
-            //dvdObj.setStock_Qoh() 
-            //getServletContext().setAttribute(ConstantsCtrl.DVD, dvdObj);
-            
-//            Thread.sleep((rand.nextInt(10)+1) * 500);
-            
-            // SHOW CART
-            //getServletContext().setAttribute(ConstantsCtrl.CART, cartObj.getTotalQty);
-            }
-                        
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<title>Servlet CheckOutServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-//            out.println(prefixIndex + "<br>");
-            out.println("<h1>Servlet CheckOutServlet at " + prod_id + prod_Qty + "    =>stock " + newStock_Qoh+ "</h1>");
-            out.println("<h1>USER INPUT " + prod_id + " " + prod_Qty + "    =>stock " + newStock_Qoh+ "</h1>");
+            out.println(dvd_list.size() + "hhhhhh<br>");
             out.println(getServletContext().getAttribute(ConstantsCtrl.PRODUCT_ID)+"<br>");
             out.println(getServletContext().getAttribute(ConstantsCtrl.PRODUCT_QTY));
             out.println("</body>");
             out.println("</html>");
-
-            request.getRequestDispatcher(ConstantsCtrl.ShowShoppingCart_JSP).forward(request, response);
-        }catch(Exception e) {}
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
