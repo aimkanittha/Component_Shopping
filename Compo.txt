@@ -1,0 +1,92 @@
+-- -----------------------------------------------------
+-- Table Catalog
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS Catalog ;
+
+CREATE TABLE IF NOT EXISTS Catalog (
+  Catelog_seq INT NOT NULL,
+  Catalog_quantity INT NULL,
+  Catalog_typeName INT NULL,
+  PRIMARY KEY (Catelog_seq) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table DvdData
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS DvdData ;
+
+CREATE TABLE IF NOT EXISTS DvdData (
+  DvdData_id INT NOT NULL,
+  DvdData_name VARCHAR(45) NULL,
+  DvdData_price DOUBLE NULL,
+  DvdData_year DATE NULL,
+  DvdData_quantity INT NULL,
+  DvdData_catalog INT NULL,
+  PRIMARY KEY (DvdData_id) ,
+  CONSTRAINT Catalog
+    FOREIGN KEY (DvdData_catalog)
+    REFERENCES Catalog (Catelog_seq)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table Member
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS Member ;
+
+CREATE TABLE IF NOT EXISTS Member (
+  Member_id INT NOT NULL,
+  Member_username VARCHAR(18) NULL,
+  Member_password VARCHAR(18) NULL,
+  Member_firstname VARCHAR(45) NULL,
+  Member_lastname VARCHAR(45) NULL,
+  Member_address VARCHAR(100) NULL,
+  PRIMARY KEY (Member_id) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table ShoppingBill
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS ShoppingBill ;
+
+CREATE TABLE IF NOT EXISTS ShoppingBill (
+  ShoppingBill_id INT NOT NULL,
+  ShoppingBill_total DOUBLE NULL,
+  ShoppingBill_member INT NULL,
+  PRIMARY KEY (ShoppingBill_id) ,
+  INDEX Member_idx (ShoppingBill_member ASC) ,
+  CONSTRAINT Member
+    FOREIGN KEY (ShoppingBill_member)
+    REFERENCES Member (Member_id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table ShoppingBillDetail
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS ShoppingBillDetail ;
+
+CREATE TABLE IF NOT EXISTS ShoppingBillDetail (
+  ShoppingBillDetail_seq INT NOT NULL,
+  ShoppingBillDetail_dvdItem INT NULL,
+  ShoppingBillDetail_bill INT NULL,
+  PRIMARY KEY (ShoppingBillDetail_seq) ,
+  INDEX dvdItem_idx (ShoppingBillDetail_dvdItem ASC) ,
+  INDEX bill_idx (ShoppingBillDetail_bill ASC) ,
+  CONSTRAINT dvdItem
+    FOREIGN KEY (ShoppingBillDetail_dvdItem)
+    REFERENCES DvdData (DvdData_id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT bill
+    FOREIGN KEY (ShoppingBillDetail_bill)
+    REFERENCES ShoppingBill (ShoppingBill_id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
