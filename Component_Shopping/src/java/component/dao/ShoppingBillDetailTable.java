@@ -5,6 +5,8 @@
  */
 package component.dao;
 
+import component.model.ShoppingBillDetail;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
@@ -35,6 +37,21 @@ public class ShoppingBillDetailTable implements ShoppingBillDetailTableLocal {
         } finally {
             em.close();
         }
+    }
+    
+    @Override
+    public void removeItem(String itemId) {
+        EntityManager em = emf.createEntityManager();
+        em.remove(em.createNamedQuery("ShoppingBillDetail.findByDvdDataId").setParameter("ShoppingBillDetail_dvdItem", itemId).getResultList());
+    }
+    
+    // Add business logic below. (Right-click in editor and choose
+    // "Insert Code > Add Business Method")
+
+    @Override
+    public List<ShoppingBillDetail> findAll() {
+        EntityManager em = emf.createEntityManager();
+        return em.createNamedQuery("ShoppingBillDetail.findAll").getResultList();
     }
 
     // Add business logic below. (Right-click in editor and choose

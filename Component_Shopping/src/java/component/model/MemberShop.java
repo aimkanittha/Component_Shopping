@@ -37,9 +37,6 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "MemberShop.findByMemberaddress", query = "SELECT m FROM MemberShop m WHERE m.memberaddress = :memberaddress")})
 public class MemberShop implements Serializable {
 
-    @OneToMany(mappedBy = "shoppingCartmember")
-    private List<ShoppingCart> shoppingCartList;
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -63,6 +60,8 @@ public class MemberShop implements Serializable {
     private String memberaddress;
     @OneToMany(mappedBy = "shoppingBillmember")
     private List<ShoppingBill> shoppingBillList;
+    @OneToMany(mappedBy = "shoppingCartmember")
+    private List<ShoppingCart> shoppingCartList;
 
     public MemberShop() {
     }
@@ -128,6 +127,15 @@ public class MemberShop implements Serializable {
         this.shoppingBillList = shoppingBillList;
     }
 
+    @XmlTransient
+    public List<ShoppingCart> getShoppingCartList() {
+        return shoppingCartList;
+    }
+
+    public void setShoppingCartList(List<ShoppingCart> shoppingCartList) {
+        this.shoppingCartList = shoppingCartList;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -151,15 +159,6 @@ public class MemberShop implements Serializable {
     @Override
     public String toString() {
         return "component.model.MemberShop[ memberid=" + memberid + " ]";
-    }
-
-    @XmlTransient
-    public List<ShoppingCart> getShoppingCartList() {
-        return shoppingCartList;
-    }
-
-    public void setShoppingCartList(List<ShoppingCart> shoppingCartList) {
-        this.shoppingCartList = shoppingCartList;
     }
     
 }

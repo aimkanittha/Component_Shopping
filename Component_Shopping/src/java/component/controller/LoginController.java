@@ -42,7 +42,7 @@ public class LoginController extends HttpServlet {
             if( member != null ){
                 if( password.equals(member.getMemberpassword()) ){
                     request.getSession().setAttribute("member", member);
-                    response.sendRedirect("showData");
+                    response.sendRedirect("");
                 }else{
                     request.getSession().setAttribute("userinvalid", 1);
                     request.getRequestDispatcher("Login/Login.jsp").forward(request, response);

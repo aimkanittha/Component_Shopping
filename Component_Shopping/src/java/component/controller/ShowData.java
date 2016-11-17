@@ -6,7 +6,6 @@
 
 package component.controller;
 
-import component.ConstantsCtrl;
 import component.model.*;
 
 import java.io.IOException;
@@ -19,11 +18,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import component.dao.DvdDataTableLocal;
 import component.dao.DvdDataTable;
+import component.dao.ShoppingBillTable;
+import component.dao.ShoppingBillTableLocal;
 import java.util.List;
-import javax.ejb.EJB;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import javax.persistence.*;
+import javax.servlet.http.HttpSession;
 /**
  *
  * @author USER
@@ -32,22 +31,35 @@ import javax.persistence.Persistence;
 public class ShowData extends HttpServlet {
 //    @EJB
     DvdDataTableLocal dvd;
+    List<DvdData> dvd_list;
+//    ShoppingBillTableLocal bill;
+//    List<ShoppingBillDetail> bill_list;
+        
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        dvd = new DvdDataTable();
+        dvd_list = dvd.getAllDvd();
         
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("Component_ShoppingPU");
-        EntityManager em = emf.createEntityManager();
-        List<DvdData> dvd_list = (List<DvdData>)em.createNamedQuery("DvdData.findAll").getResultList();
-        try (PrintWriter out = response.getWriter()) {
-            
-            getServletContext().setAttribute("dvdItems", dvd_list);
-            request.setAttribute("dvdName", dvd_list.get(0).getDvdDataname());
-        request.getRequestDispatcher("/ShoppingCart/ShowShoppingCart.jsp").forward(request, response);
-//        response.sendRedirect(request.getContextPath() + "/ShowShoppingCart.jsp");
-        }
-    }
+        MemberShop member = (MemberShop)request.getSession().getAttribute("member");
+        
+//        bill = new ShoppingBillTable();
+//        
+//        bill_list = bill.findAll();
 
+//        List<DvdData> dvd_list = (List<DvdData>)em.createNamedQuery("DvdData.findAll").getResultList();
+
+//        try (PrintWriter out = response.getWriter()) {
+//        
+//        HttpSession session = request.getSession();
+//        session.setAttribute("dvdItems", dvd_list);
+//        
+////        session.setAttribute("billDetail", bill_list);
+//        
+//        }catch(Exception e){}
+        request.getRequestDispatcher("ShoppingCart/ShowShoppingCart.jsp").forward(request, response);
+    }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

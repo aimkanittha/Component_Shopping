@@ -11,7 +11,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
 
 /**
  *
@@ -20,12 +19,12 @@ import javax.persistence.PersistenceContext;
 @Stateless
 public class DvdDataTable implements DvdDataTableLocal {
 
-    @PersistenceContext(unitName = "Component_ShoppingPU")
-    private EntityManager em;
+     EntityManagerFactory emf = Persistence.createEntityManagerFactory("Component_ShoppingPU");
+//    private EntityManager em;
 
     @Override
     public List<DvdData> getAllDvd() {
-//        EntityManager em = emf.createEntityManager();   
+        EntityManager em = emf.createEntityManager();   
         return em.createNamedQuery("DvdData.findAll").getResultList();
     }
     
@@ -34,6 +33,7 @@ public class DvdDataTable implements DvdDataTableLocal {
     // "Insert Code > Add Business Method")
 
     public void persist(Object object) {
+        EntityManager em = emf.createEntityManager(); 
         em.persist(object);
     }
 }

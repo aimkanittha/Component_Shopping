@@ -5,6 +5,8 @@
  */
 package component.dao;
 
+import component.model.ShoppingBillDetail;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -13,5 +15,9 @@ import javax.ejb.Local;
  */
 @Local
 public interface ShoppingBillDetailTableLocal {
+    void persist(Object object);
     
+    void removeItem(String itemId);
+
+    List<ShoppingBillDetail> findAll();
 }

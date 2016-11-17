@@ -6,8 +6,12 @@
 package component.controller;
 
 import component.ConstantsCtrl;
+import component.dao.ShoppingBillTable;
+import component.dao.ShoppingBillTableLocal;
+import component.model.ShoppingBillDetail;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,22 +22,19 @@ import javax.servlet.http.HttpServletResponse;
  * @author USER
  */
 public class RemoveItemServlet extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    ShoppingBillTableLocal bill;
+    List<ShoppingBillDetail> bill_list;
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            String prod_QtyStr = request.getParameter(ConstantsCtrl.PRODUCT_QTY);
-            Integer prod_Qty = Integer.parseInt(prod_QtyStr == "" ? "0" : prod_QtyStr);
+            String prod_id = request.getParameter("remove");
+//            bill = new ShoppingBillTable();
+//            bill.removeItem(prod_id);
+//            bill_list = bill.findAll();
+            
+            request.getSession().setAttribute("billDetail", bill_list);
+            response.sendRedirect("ShoppingCart/ShowShoppingCart.jsp");
         }
     }
 

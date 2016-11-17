@@ -6,6 +6,8 @@
 package component.dao;
 
 import component.model.ShoppingBill;
+import component.model.ShoppingBillDetail;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
@@ -36,8 +38,13 @@ public class ShoppingBillTable implements ShoppingBillTableLocal {
         }
     }
     
-    
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
+
+    @Override
+    public List<ShoppingBillDetail> findAll() {
+        EntityManager em = emf.createEntityManager();
+        return em.createNamedQuery("ShoppingBill.findAll").getResultList();
+    }
 
 }

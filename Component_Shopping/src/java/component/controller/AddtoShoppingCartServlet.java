@@ -43,8 +43,8 @@ public class AddtoShoppingCartServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        int dvdId = 1789562210;//Integer.parseInt( request.getParameter("addDvdId") );
-        int qty = 3;
+        int dvdId = Integer.parseInt((String) request.getParameter("action") );
+        int qty = 1;//Integer.parseInt((String) request.getParameter("Quantity") );
 //        ShoppingBillJpaController spbjpa = new ShoppingBillJpaController(emf);
 //        ShoppingBill spb = ShoppingBill();
         dvdJpa = new DvdDataJpaController(emf);
@@ -58,7 +58,7 @@ public class AddtoShoppingCartServlet extends HttpServlet {
         DvdData dvdData = dvdJpa.findDvdData(dvdId);
         synchronized(request.getSession()){
             if(dvdData.getDvdDataquantity()<qty){
-                response.sendRedirect("showData");
+                response.sendRedirect(request.getServletPath());
                 return;
             }
             if(scjpa.findMemberCart(member, dvdData)==null){
