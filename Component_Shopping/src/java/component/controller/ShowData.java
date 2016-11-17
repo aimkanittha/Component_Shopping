@@ -20,6 +20,7 @@ import component.dao.DvdDataTableLocal;
 import component.dao.DvdDataTable;
 import component.dao.ShoppingBillTable;
 import component.dao.ShoppingBillTableLocal;
+import component.jpa.ShoppingCartJpaController;
 import java.util.List;
 import javax.persistence.*;
 import javax.servlet.http.HttpSession;
@@ -32,30 +33,35 @@ public class ShowData extends HttpServlet {
 //    @EJB
     DvdDataTableLocal dvd;
     List<DvdData> dvd_list;
+    ShoppingCartJpaController scjpa;
 //    ShoppingBillTableLocal bill;
 //    List<ShoppingBillDetail> bill_list;
         
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("Component_ShoppingPU");
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        EntityManager em = emf.createEntityManager();
         dvd = new DvdDataTable();
         dvd_list = dvd.getAllDvd();
-        
+        scjpa = new ShoppingCartJpaController(emf);
         MemberShop member = (MemberShop)request.getSession().getAttribute("member");
         
 //        bill = new ShoppingBillTable();
 //        
 //        bill_list = bill.findAll();
 
-//        List<DvdData> dvd_list = (List<DvdData>)em.createNamedQuery("DvdData.findAll").getResultList();
+        List<DvdData> dvd_list = (List<DvdData>)em.createNamedQuery("DvdData.findAll").getResultList();
 
 //        try (PrintWriter out = response.getWriter()) {
 //        
-//        HttpSession session = request.getSession();
-//        session.setAttribute("dvdItems", dvd_list);
+        HttpSession session = request.getSession();
+        session.setAttribute("dvdItems", dvd_list);
 //        
-////        session.setAttribute("billDetail", bill_list);
+//        session.removeAttribute("billDetail");
+        session.setAttribute("billDetail", scjpa.getMemberCart(member));
+        
 //        
 //        }catch(Exception e){}
         request.getRequestDispatcher("ShoppingCart/ShowShoppingCart.jsp").forward(request, response);

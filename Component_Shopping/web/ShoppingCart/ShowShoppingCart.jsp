@@ -82,8 +82,7 @@
 <center>
             
             <%
-            Thread.sleep(500);
-            List<ShoppingBillDetail> listShop = (List<ShoppingBillDetail>) request.getSession().getAttribute("billDetail");
+            List<ShoppingCart> listShop = (List<ShoppingCart>) request.getSession().getAttribute("billDetail");
             int listSize = listShop.size();
             if(listSize > 0){
                out.println("<center><h2> CART </h2></center>");
@@ -99,28 +98,28 @@
                for(int i=0; i < listSize ;i++){
                         out.println("<tr>");
                         out.println("<td>");
-                            out.println(listShop.get(i).getShoppingBillDetailseq());
+                            out.println(i+1);
                         out.println("</td>");
                         out.println("<td>");
-                            out.println(listShop.get(i).getShoppingBillDetaildvdItem().getDvdDataid());
+                            out.println(listShop.get(i).getShoppingCartdvd().getDvdDataid());
                         out.println("</td>");
                         out.println("<td>");
-                            out.println(listShop.get(i).getShoppingBillDetaildvdItem().getDvdDataname());
+                            out.println(listShop.get(i).getShoppingCartdvd().getDvdDataname());
                         out.println("</td>");
                         out.println("<td>");
-                            out.println(listShop.get(i).getShoppingBillDetaildvdItem().getDvdDatacatalog().getCatalogtypeName());
+                            out.println(listShop.get(i).getShoppingCartdvd().getDvdDatacatalog().getCatalogtypeName());
                         out.println("</td>");
                         out.println("<td>");
-                            out.println(listShop.get(i).getShoppingBillDetaildvdItem().getDvdDatayear());
+                            out.println(listShop.get(i).getShoppingCartdvd().getDvdDatayear());
                         out.println("</td>");
                         out.println("<td>");
-                            out.println(listShop.get(i).getShoppingBillDetaildvdItem().getDvdDataprice());
+                            out.println( listShop.get(i).getShoppingCartdvd().getDvdDataprice()*listShop.get(i).getShoppingCartdvQty()  );
                         out.println("</td>");
                         out.println("<td>");
-                            out.println("<input type='number' name='Quautity"+i+"' value='0' readonly />");
+                            out.println("<input type='number' name='Quautity"+i+"' value='"+listShop.get(i).getShoppingCartdvQty()+"' readonly />");
                         out.println("</td>");
                         out.println("<td>");
-                            out.println("<button style='width:100%' type='submit' name='remove' value='"+i+"' onclick=\"form.action='removeItem';\" value='"+listShop.get(i).getShoppingBillDetaildvdItem().getDvdDataid()+"'>Remove</button>");
+                            out.println("<button style='width:100%' type='submit' name='remove' value='"+i+"' onclick=\"form.action='removeItem';\" value='"+listShop.get(i).getShoppingCartdvd()+"'>Remove</button>");
                         out.println("</td>");
                         out.println("</tr>");
                }

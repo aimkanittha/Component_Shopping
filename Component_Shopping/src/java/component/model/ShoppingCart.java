@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "ShoppingCart.findAll", query = "SELECT s FROM ShoppingCart s")
-    , @NamedQuery(name = "ShoppingCart.findByShoppingCartid", query = "SELECT s FROM ShoppingCart s WHERE s.shoppingCartid = :shoppingCartid")
+    , @NamedQuery(name = "ShoppingCart.findByShoppingCartmember", query = "SELECT s FROM ShoppingCart s WHERE s.shoppingCartmember = :shoppingCartmember")
     , @NamedQuery(name = "ShoppingCart.findMemberCart", query = "SELECT s FROM ShoppingCart s WHERE s.shoppingCartmember = :shoppingCartmember AND s.shoppingCartdvd = :shoppingCartdvd")
     , @NamedQuery(name = "ShoppingCart.findByShoppingCartdvQty", query = "SELECT s FROM ShoppingCart s WHERE s.shoppingCartdvQty = :shoppingCartdvQty")})
 public class ShoppingCart implements Serializable {

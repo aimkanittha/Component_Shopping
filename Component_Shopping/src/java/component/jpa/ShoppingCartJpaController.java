@@ -71,6 +71,12 @@ public class ShoppingCartJpaController implements Serializable {
             }
         }
     }
+    
+    public List<ShoppingCart> getMemberCart(MemberShop member){
+       EntityManager em = getEntityManager();
+       List<ShoppingCart> sc = em.createNamedQuery("ShoppingCart.findByShoppingCartmember").setParameter("shoppingCartmember", member).getResultList();
+       return sc;
+    }
 
     public void edit(ShoppingCart shoppingCart) throws NonexistentEntityException, Exception {
         EntityManager em = null;
@@ -195,7 +201,7 @@ public class ShoppingCartJpaController implements Serializable {
     public ShoppingCart findMemberCart(MemberShop member,DvdData dvd){
         EntityManager em = getEntityManager();
         List<ShoppingCart> query = em.createNamedQuery("ShoppingCart.findMemberCart").setParameter("shoppingCartmember", member).setParameter("shoppingCartdvd", dvd).getResultList();
-       if( query.size() == 0)
+        if( query.size() == 0)
            return null;
        return query.get(0);
     }

@@ -58,12 +58,12 @@ public class AddtoShoppingCartServlet extends HttpServlet {
         DvdData dvdData = dvdJpa.findDvdData(dvdId);
         synchronized(request.getSession()){
             if(dvdData.getDvdDataquantity()<qty){
-                response.sendRedirect(request.getServletPath());
+                response.sendRedirect("showData");
                 return;
             }
             if(scjpa.findMemberCart(member, dvdData)==null){
                 scart = new ShoppingCart();
-                scart.setShoppingCartid(member.getMemberid());
+                scart.setShoppingCartid(scjpa.findShoppingCartEntities().size()+1);
                 scart.setShoppingCartmember(member);
                 scart.setShoppingCartdvd(dvdJpa.findDvdData(dvdId));
                 scart.setShoppingCartdvQty(qty);
@@ -75,8 +75,8 @@ public class AddtoShoppingCartServlet extends HttpServlet {
                     Logger.getLogger(AddtoShoppingCartServlet.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }else{
-                scart = scjpa.findShoppingCart(member.getMemberid());
-                scart.setShoppingCartdvQty(qty);
+                scart = scjpa.findMemberCart(member, dvdData);
+                scart.setShoppingCartdvQty(scart.getShoppingCartdvQty()+qty);
                 dvdData.setDvdDataquantity(dvdData.getDvdDataquantity()-qty);
                 try {
                     dvdJpa.edit(dvdData);
@@ -85,13 +85,13 @@ public class AddtoShoppingCartServlet extends HttpServlet {
                     Logger.getLogger(AddtoShoppingCartServlet.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            scjpa = new ShoppingCartJpaController(emf);
+//            scjpa = new ShoppingCartJpaController(emf);
             
-            List<DvdData> dvdList = new ArrayList<DvdData>();
-            DvdData dvd = dvdJpa.findDvdData(dvdId);
-            if( dvd.getDvdDataquantity()!=0 ){
-                dvdList.add(dvd);
-            }
+//            List<DvdData> dvdList = new ArrayList<DvdData>();
+//            DvdData dvd = dvdJpa.findDvdData(dvdId);
+//            if( dvd.getDvdDataquantity()!=0 ){
+//                dvdList.add(dvd);
+//            }
         }
         response.sendRedirect("showData");
     }

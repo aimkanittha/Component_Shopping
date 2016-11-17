@@ -34,7 +34,6 @@ public class RemoveItemServlet extends HttpServlet {
 //            bill_list = bill.findAll();
             
             request.getSession().setAttribute("billDetail", bill_list);
-            response.sendRedirect("ShoppingCart/ShowShoppingCart.jsp");
         }
     }
 
