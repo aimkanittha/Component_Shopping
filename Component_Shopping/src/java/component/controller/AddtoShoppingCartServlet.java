@@ -30,57 +30,17 @@ public class AddtoShoppingCartServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            String prod_id = request.getParameter("prodId");
-//            Integer prefixIndex = (Integer) getServletContext().getAttribute(ConstantsCtrl.PREFIX_INDEX);
-            
-            String prod_QtyStr = request.getParameter(ConstantsCtrl.PRODUCT_QTY);
-            Integer prod_Qty = Integer.parseInt(prod_QtyStr == "" ? "0" : prod_QtyStr);
-            boolean isEmpty = false;
-            
-            
-            int stock_Qoh, cart_Qoh, newStock_Qoh;
-            // CART cartObj = new CART();
-//            HttpSession session = request.getSession();
-            Random rand = new Random();
-            
-            synchronized(getServletContext()) {
-            
-            stock_Qoh = 0;// DVD.getStockQoh()
-            cart_Qoh = 0; // ShoppingCart.getCartQoh
-            
-            if((stock_Qoh - prod_Qty) < 0) {
-                isEmpty = true;
-            }
-            newStock_Qoh = (stock_Qoh - prod_Qty) <= 0 ? 0: stock_Qoh - prod_Qty; // For check warning
-            
-            
-//             getServletContext().setAttribute(ConstantsCtrl.PRODUCT_NAME, "5555555555555555");
-            Thread.sleep((rand.nextInt(10)+1) * 500);
-//             getServletContext().setAttribute(ConstantsCtrl.PRODUCT_QTY, 5);
-            //dvdObj.setStock_Qoh() 
-            //getServletContext().setAttribute(ConstantsCtrl.DVD, dvdObj);
-            
-//            Thread.sleep((rand.nextInt(10)+1) * 500);
-            
-            // SHOW CART
-            //getServletContext().setAttribute(ConstantsCtrl.CART, cartObj.getTotalQty);
-            }
-                        
+        try (PrintWriter out = response.getWriter()) {  
             out.println("<!DOCTYPE html>");
             out.println("<html>");
-            out.println("<title>Servlet CheckOutServlet</title>");            
+            out.println("<title>ADDDDDDDDDDDDDDDDDDDD</title>");            
             out.println("</head>");
             out.println("<body>");
-//            out.println(prefixIndex + "<br>");
-            out.println("<h1>Servlet CheckOutServlet at " + prod_id + prod_Qty + "    =>stock " + newStock_Qoh+ "</h1>");
-            out.println("<h1>USER INPUT " + prod_id + " " + prod_Qty + "    =>stock " + newStock_Qoh+ "</h1>");
-//            out.println(getServletContext().getAttribute(ConstantsCtrl.PRODUCT_ID)+"<br>");
-//            out.println(getServletContext().getAttribute(ConstantsCtrl.PRODUCT_QTY));
+            out.println("ADDDDDDDDDDDDDDDDDDDD");  
             out.println("</body>");
             out.println("</html>");
 
-            request.getRequestDispatcher(ConstantsCtrl.ShowShoppingCart_JSP).forward(request, response);
+//            request.getRequestDispatcher(ConstantsCtrl.ShowShoppingCart_JSP).forward(request, response);
         }catch(Exception e) {}
     }
 
