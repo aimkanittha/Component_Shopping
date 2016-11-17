@@ -41,6 +41,9 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "DvdData.findByDvdDataquantity", query = "SELECT d FROM DvdData d WHERE d.dvdDataquantity = :dvdDataquantity")})
 public class DvdData implements Serializable {
 
+    @OneToMany(mappedBy = "shoppingCartdvd")
+    private List<ShoppingCart> shoppingCartList;
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -151,6 +154,15 @@ public class DvdData implements Serializable {
     @Override
     public String toString() {
         return "component.model.DvdData[ dvdDataid=" + dvdDataid + " ]";
+    }
+
+    @XmlTransient
+    public List<ShoppingCart> getShoppingCartList() {
+        return shoppingCartList;
+    }
+
+    public void setShoppingCartList(List<ShoppingCart> shoppingCartList) {
+        this.shoppingCartList = shoppingCartList;
     }
     
 }

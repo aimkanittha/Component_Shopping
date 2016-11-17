@@ -16,6 +16,16 @@ import javax.servlet.http.HttpServletResponse;
 import component.model.*;
 
 import component.ConstantsCtrl;
+import component.dao.ShoppingBillTableLocal;
+import component.jpa.DvdDataJpaController;
+import component.jpa.ShoppingBillJpaController;
+import component.jpa.ShoppingCartJpaController;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 //import component.model.Catalog;
 //import javax.ejb.EJB;
 /**
@@ -23,65 +33,67 @@ import component.ConstantsCtrl;
  * @author USER
  */
 public class AddtoShoppingCartServlet extends HttpServlet {
-
+    ShoppingBillTableLocal sbt;
+    DvdDataJpaController dvdJpa;
+    ShoppingCartJpaController scjpa;
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("Component_ShoppingPU");
     // @EJB
     // private CatalogDAOLocal ICatalog;
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            String prod_id = request.getParameter("prodId");
-//            Integer prefixIndex = (Integer) getServletContext().getAttribute(ConstantsCtrl.PREFIX_INDEX);
-            
-            String prod_QtyStr = request.getParameter(ConstantsCtrl.PRODUCT_QTY);
-            Integer prod_Qty = Integer.parseInt(prod_QtyStr == "" ? "0" : prod_QtyStr);
-            boolean isEmpty = false;
-            
-            
-            int stock_Qoh, cart_Qoh, newStock_Qoh;
-            // CART cartObj = new CART();
-//            HttpSession session = request.getSession();
-            Random rand = new Random();
-            
-            synchronized(getServletContext()) {
-            
-            stock_Qoh = 0;// DVD.getStockQoh()
-            cart_Qoh = 0; // ShoppingCart.getCartQoh
-            
-            if((stock_Qoh - prod_Qty) < 0) {
-                isEmpty = true;
+        int dvdId = 1789562210;//Integer.parseInt( request.getParameter("addDvdId") );
+        int qty = 3;
+//        ShoppingBillJpaController spbjpa = new ShoppingBillJpaController(emf);
+//        ShoppingBill spb = ShoppingBill();
+        dvdJpa = new DvdDataJpaController(emf);
+        scjpa = new ShoppingCartJpaController(emf);
+        MemberShop member = ((MemberShop) request.getSession().getAttribute("member"));
+        ShoppingCart scart;
+//        scart.setShoppingCartid(member.getMemberid());
+//        scart.setShoppingCartmember(member);
+//        scart.setShoppingCartdvd(dvdJpa.findDvdData(dvdId));
+//        scart = scjpa.findShoppingCart(member.getMemberid());
+        DvdData dvdData = dvdJpa.findDvdData(dvdId);
+        synchronized(request.getSession()){
+            if(dvdData.getDvdDataquantity()<qty){
+                response.sendRedirect("showData");
+                return;
             }
-            newStock_Qoh = (stock_Qoh - prod_Qty) <= 0 ? 0: stock_Qoh - prod_Qty; // For check warning
-            
-            
-//             getServletContext().setAttribute(ConstantsCtrl.PRODUCT_NAME, "5555555555555555");
-            Thread.sleep((rand.nextInt(10)+1) * 500);
-//             getServletContext().setAttribute(ConstantsCtrl.PRODUCT_QTY, 5);
-            //dvdObj.setStock_Qoh() 
-            //getServletContext().setAttribute(ConstantsCtrl.DVD, dvdObj);
-            
-//            Thread.sleep((rand.nextInt(10)+1) * 500);
-            
-            // SHOW CART
-            //getServletContext().setAttribute(ConstantsCtrl.CART, cartObj.getTotalQty);
+            if(scjpa.findMemberCart(member, dvdData)==null){
+                scart = new ShoppingCart();
+                scart.setShoppingCartid(member.getMemberid());
+                scart.setShoppingCartmember(member);
+                scart.setShoppingCartdvd(dvdJpa.findDvdData(dvdId));
+                scart.setShoppingCartdvQty(qty);
+                dvdData.setDvdDataquantity(dvdData.getDvdDataquantity()-qty);
+                try {
+                    dvdJpa.edit(dvdData);
+                    scjpa.create(scart);
+                } catch (Exception ex) {
+                    Logger.getLogger(AddtoShoppingCartServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }else{
+                scart = scjpa.findShoppingCart(member.getMemberid());
+                scart.setShoppingCartdvQty(qty);
+                dvdData.setDvdDataquantity(dvdData.getDvdDataquantity()-qty);
+                try {
+                    dvdJpa.edit(dvdData);
+                    scjpa.edit(scart);
+                } catch (Exception ex) {
+                    Logger.getLogger(AddtoShoppingCartServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-                        
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<title>Servlet CheckOutServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-//            out.println(prefixIndex + "<br>");
-            out.println("<h1>Servlet CheckOutServlet at " + prod_id + prod_Qty + "    =>stock " + newStock_Qoh+ "</h1>");
-            out.println("<h1>USER INPUT " + prod_id + " " + prod_Qty + "    =>stock " + newStock_Qoh+ "</h1>");
-//            out.println(getServletContext().getAttribute(ConstantsCtrl.PRODUCT_ID)+"<br>");
-//            out.println(getServletContext().getAttribute(ConstantsCtrl.PRODUCT_QTY));
-            out.println("</body>");
-            out.println("</html>");
-
-            request.getRequestDispatcher(ConstantsCtrl.ShowShoppingCart_JSP).forward(request, response);
-        }catch(Exception e) {}
+            scjpa = new ShoppingCartJpaController(emf);
+            
+            List<DvdData> dvdList = new ArrayList<DvdData>();
+            DvdData dvd = dvdJpa.findDvdData(dvdId);
+            if( dvd.getDvdDataquantity()!=0 ){
+                dvdList.add(dvd);
+            }
+        }
+        response.sendRedirect("showData");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
