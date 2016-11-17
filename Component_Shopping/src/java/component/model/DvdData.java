@@ -6,8 +6,8 @@
 package component.model;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,10 +27,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author wachirapong
+ * @author USER
  */
 @Entity
-@Table(name = "DvdData")
+@Table(name = "dvddata")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "DvdData.findAll", query = "SELECT d FROM DvdData d")
@@ -58,11 +58,11 @@ public class DvdData implements Serializable {
     private Date dvdDatayear;
     @Column(name = "DvdData_quantity")
     private Integer dvdDataquantity;
+    @OneToMany(mappedBy = "shoppingBillDetaildvdItem")
+    private Collection<ShoppingBillDetail> shoppingBillDetailCollection;
     @JoinColumn(name = "DvdData_catalog", referencedColumnName = "Catelog_seq")
     @ManyToOne
     private Catalog dvdDatacatalog;
-    @OneToMany(mappedBy = "shoppingBillDetaildvdItem")
-    private List<ShoppingBillDetail> shoppingBillDetailList;
 
     public DvdData() {
     }
@@ -111,21 +111,21 @@ public class DvdData implements Serializable {
         this.dvdDataquantity = dvdDataquantity;
     }
 
+    @XmlTransient
+    public Collection<ShoppingBillDetail> getShoppingBillDetailCollection() {
+        return shoppingBillDetailCollection;
+    }
+
+    public void setShoppingBillDetailCollection(Collection<ShoppingBillDetail> shoppingBillDetailCollection) {
+        this.shoppingBillDetailCollection = shoppingBillDetailCollection;
+    }
+
     public Catalog getDvdDatacatalog() {
         return dvdDatacatalog;
     }
 
     public void setDvdDatacatalog(Catalog dvdDatacatalog) {
         this.dvdDatacatalog = dvdDatacatalog;
-    }
-
-    @XmlTransient
-    public List<ShoppingBillDetail> getShoppingBillDetailList() {
-        return shoppingBillDetailList;
-    }
-
-    public void setShoppingBillDetailList(List<ShoppingBillDetail> shoppingBillDetailList) {
-        this.shoppingBillDetailList = shoppingBillDetailList;
     }
 
     @Override

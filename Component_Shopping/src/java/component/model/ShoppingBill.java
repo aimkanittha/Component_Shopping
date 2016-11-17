@@ -6,7 +6,7 @@
 package component.model;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,10 +23,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author wachirapong
+ * @author USER
  */
 @Entity
-@Table(name = "ShoppingBill")
+@Table(name = "shoppingbill")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "ShoppingBill.findAll", query = "SELECT s FROM ShoppingBill s")
@@ -47,7 +47,7 @@ public class ShoppingBill implements Serializable {
     @ManyToOne
     private MemberShop shoppingBillmember;
     @OneToMany(mappedBy = "shoppingBillDetailbill")
-    private List<ShoppingBillDetail> shoppingBillDetailList;
+    private Collection<ShoppingBillDetail> shoppingBillDetailCollection;
 
     public ShoppingBill() {
     }
@@ -81,12 +81,12 @@ public class ShoppingBill implements Serializable {
     }
 
     @XmlTransient
-    public List<ShoppingBillDetail> getShoppingBillDetailList() {
-        return shoppingBillDetailList;
+    public Collection<ShoppingBillDetail> getShoppingBillDetailCollection() {
+        return shoppingBillDetailCollection;
     }
 
-    public void setShoppingBillDetailList(List<ShoppingBillDetail> shoppingBillDetailList) {
-        this.shoppingBillDetailList = shoppingBillDetailList;
+    public void setShoppingBillDetailCollection(Collection<ShoppingBillDetail> shoppingBillDetailCollection) {
+        this.shoppingBillDetailCollection = shoppingBillDetailCollection;
     }
 
     @Override

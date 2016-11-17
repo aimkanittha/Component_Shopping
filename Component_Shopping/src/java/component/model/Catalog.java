@@ -6,7 +6,7 @@
 package component.model;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,10 +21,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author wachirapong
+ * @author USER
  */
 @Entity
-@Table(name = "Catalog")
+@Table(name = "catalog")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Catalog.findAll", query = "SELECT c FROM Catalog c")
@@ -44,7 +44,7 @@ public class Catalog implements Serializable {
     @Column(name = "Catalog_typeName")
     private Integer catalogtypeName;
     @OneToMany(mappedBy = "dvdDatacatalog")
-    private List<DvdData> dvdDataList;
+    private Collection<DvdData> dvdDataCollection;
 
     public Catalog() {
     }
@@ -78,12 +78,12 @@ public class Catalog implements Serializable {
     }
 
     @XmlTransient
-    public List<DvdData> getDvdDataList() {
-        return dvdDataList;
+    public Collection<DvdData> getDvdDataCollection() {
+        return dvdDataCollection;
     }
 
-    public void setDvdDataList(List<DvdData> dvdDataList) {
-        this.dvdDataList = dvdDataList;
+    public void setDvdDataCollection(Collection<DvdData> dvdDataCollection) {
+        this.dvdDataCollection = dvdDataCollection;
     }
 
     @Override

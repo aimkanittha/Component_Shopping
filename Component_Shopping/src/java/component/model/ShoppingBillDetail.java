@@ -11,23 +11,27 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author wachirapong
+ * @author USER
  */
 @Entity
-@Table(name = "ShoppingBillDetail")
+@Table(name = "shoppingbilldetail")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "ShoppingBillDetail.findAll", query = "SELECT s FROM ShoppingBillDetail s")
-    , @NamedQuery(name = "ShoppingBillDetail.findByShoppingBillDetailseq", query = "SELECT s FROM ShoppingBillDetail s WHERE s.shoppingBillDetailseq = :shoppingBillDetailseq")})
+    , @NamedQuery(name = "ShoppingBillDetail.findByShoppingBillDetailseq", query = "SELECT s FROM ShoppingBillDetail s WHERE s.shoppingBillDetailseq = :shoppingBillDetailseq")
+    , @NamedQuery(name = "ShoppingBillDetail.findByShoppingBillDetaildvdQty", query = "SELECT s FROM ShoppingBillDetail s WHERE s.shoppingBillDetaildvdQty = :shoppingBillDetaildvdQty")
+    , @NamedQuery(name = "ShoppingBillDetail.findByDvdDataId", query = "SELECT s FROM ShoppingBillDetail s WHERE s.ShoppingBillDetail_dvdItem = :ShoppingBillDetail_dvdItem")})
 public class ShoppingBillDetail implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -36,18 +40,34 @@ public class ShoppingBillDetail implements Serializable {
     @NotNull
     @Column(name = "ShoppingBillDetail_seq")
     private Integer shoppingBillDetailseq;
-    @JoinColumn(name = "ShoppingBillDetail_dvdItem", referencedColumnName = "DvdData_id")
-    @ManyToOne
-    private DvdData shoppingBillDetaildvdItem;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "ShoppingBillDetail_dvdQty")
+    private int shoppingBillDetaildvdQty;
+    @Basic(optional = false)
+    @NotNull
+    @Lob
+    @Size(min = 1, max = 65535)
+    @Column(name = "ShoppingBill_status")
+    private String shoppingBillstatus;
     @JoinColumn(name = "ShoppingBillDetail_bill", referencedColumnName = "ShoppingBill_id")
     @ManyToOne
     private ShoppingBill shoppingBillDetailbill;
+    @JoinColumn(name = "ShoppingBillDetail_dvdItem", referencedColumnName = "DvdData_id")
+    @ManyToOne
+    private DvdData shoppingBillDetaildvdItem;
 
     public ShoppingBillDetail() {
     }
 
     public ShoppingBillDetail(Integer shoppingBillDetailseq) {
         this.shoppingBillDetailseq = shoppingBillDetailseq;
+    }
+
+    public ShoppingBillDetail(Integer shoppingBillDetailseq, int shoppingBillDetaildvdQty, String shoppingBillstatus) {
+        this.shoppingBillDetailseq = shoppingBillDetailseq;
+        this.shoppingBillDetaildvdQty = shoppingBillDetaildvdQty;
+        this.shoppingBillstatus = shoppingBillstatus;
     }
 
     public Integer getShoppingBillDetailseq() {
@@ -58,12 +78,20 @@ public class ShoppingBillDetail implements Serializable {
         this.shoppingBillDetailseq = shoppingBillDetailseq;
     }
 
-    public DvdData getShoppingBillDetaildvdItem() {
-        return shoppingBillDetaildvdItem;
+    public int getShoppingBillDetaildvdQty() {
+        return shoppingBillDetaildvdQty;
     }
 
-    public void setShoppingBillDetaildvdItem(DvdData shoppingBillDetaildvdItem) {
-        this.shoppingBillDetaildvdItem = shoppingBillDetaildvdItem;
+    public void setShoppingBillDetaildvdQty(int shoppingBillDetaildvdQty) {
+        this.shoppingBillDetaildvdQty = shoppingBillDetaildvdQty;
+    }
+
+    public String getShoppingBillstatus() {
+        return shoppingBillstatus;
+    }
+
+    public void setShoppingBillstatus(String shoppingBillstatus) {
+        this.shoppingBillstatus = shoppingBillstatus;
     }
 
     public ShoppingBill getShoppingBillDetailbill() {
@@ -72,6 +100,14 @@ public class ShoppingBillDetail implements Serializable {
 
     public void setShoppingBillDetailbill(ShoppingBill shoppingBillDetailbill) {
         this.shoppingBillDetailbill = shoppingBillDetailbill;
+    }
+
+    public DvdData getShoppingBillDetaildvdItem() {
+        return shoppingBillDetaildvdItem;
+    }
+
+    public void setShoppingBillDetaildvdItem(DvdData shoppingBillDetaildvdItem) {
+        this.shoppingBillDetaildvdItem = shoppingBillDetaildvdItem;
     }
 
     @Override

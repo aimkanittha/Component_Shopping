@@ -30,13 +30,17 @@ public class AddtoShoppingCartServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        String action = request.getParameter("action");
+        String paramv = "Quautity"+action;
+        String param = request.getParameter(paramv);
         try (PrintWriter out = response.getWriter()) {  
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<title>ADDDDDDDDDDDDDDDDDDDD</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("ADDDDDDDDDDDDDDDDDDDD");  
+            out.println("DVD Id"+action); 
+            out.println("Quautity"+param);  
             out.println("</body>");
             out.println("</html>");
 

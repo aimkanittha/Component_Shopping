@@ -6,8 +6,12 @@
     <class>component.model.MemberShop</class>
     <class>component.model.Catalog</class>
     <class>component.model.ShoppingBill</class>
-    <class>component.model.ShoppingBillDetail</class>
     <class>component.model.DvdData</class>
+    <class>component.model.Shoppingbill</class>
+    <class>component.model.Shoppingbilldetail</class>
+    <class>component.model.Member1</class>
+    <class>component.model.Dvddata</class>
+    <class>component.model.ShoppingBillDetail</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/Shopping_cart?zeroDateTimeBehavior=convertToNull"/>
