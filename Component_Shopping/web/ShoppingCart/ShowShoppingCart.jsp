@@ -116,10 +116,10 @@
                             out.println( listShop.get(i).getShoppingCartdvd().getDvdDataprice()*listShop.get(i).getShoppingCartdvQty()  );
                         out.println("</td>");
                         out.println("<td>");
-                            out.println("<input type='number' name='Quautity"+i+"' value='"+listShop.get(i).getShoppingCartdvQty()+"' readonly />");
+                            out.println("<input type='text' name='Quautity"+i+"' value='"+listShop.get(i).getShoppingCartdvQty()+"' readonly />");
                         out.println("</td>");
                         out.println("<td>");
-                            out.println("<button style='width:100%' type='submit' name='remove' value='"+i+"' onclick=\"form.action='removeItem';\" value='"+listShop.get(i).getShoppingCartdvd()+"'>Remove</button>");
+                            out.println("<button style='width:100%' type='submit' name='remove' value='"+listShop.get(i).getShoppingCartdvd().getDvdDataid()+"' onclick=\"form.action='removeItem';\" value='"+listShop.get(i).getShoppingCartdvd()+"'>Remove</button>");
                         out.println("</td>");
                         out.println("</tr>");
                }
@@ -131,7 +131,7 @@
         </form>
         
     <br><br><br>
-    <center><button type="submit" name="confirm">Check out</button></center>
+    <center><a href="checkOut">Check out</a></center>
         
     </body>
 </html>

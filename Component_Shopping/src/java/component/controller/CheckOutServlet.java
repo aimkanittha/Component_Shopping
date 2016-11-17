@@ -5,9 +5,21 @@
  */
 package component.controller;
 
+import component.jpa.MemberShopJpaController;
+import component.jpa.ShoppingBillDetailJpaController;
+import component.jpa.ShoppingBillJpaController;
 import component.jpa.ShoppingCartJpaController;
+import component.jpa.exceptions.NonexistentEntityException;
+import component.model.MemberShop;
+import component.model.ShoppingBill;
+import component.model.ShoppingBillDetail;
+import component.model.ShoppingCart;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.servlet.ServletException;
@@ -30,12 +42,38 @@ public class CheckOutServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-//    ShoppingCartJpaController scjpa;
-//    Shopping
-//    EntityManagerFactory emf = Persistence.createEntityManagerFactory("Component_ShoppingPU");
+    ShoppingCartJpaController scjpa;
+    ShoppingBillJpaController sbjpa;
+    ShoppingBillDetailJpaController sbdjpa;
+    MemberShopJpaController msjc;
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("Component_ShoppingPU");
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        msjc = new MemberShopJpaController(emf);
+        scjpa = new ShoppingCartJpaController(emf);
+        sbjpa = new ShoppingBillJpaController(emf);
+        sbdjpa = new ShoppingBillDetailJpaController(emf);
+        MemberShop member = ((MemberShop) request.getSession().getAttribute("member"));
+        List<ShoppingCart> sc = scjpa.getMemberCart(member);
+        List<ShoppingBillDetail> sbdList = new ArrayList<ShoppingBillDetail>();
+        ShoppingBill sb = new ShoppingBill();
+        sb.setShoppingBillmember(member);
+        sb.setShoppingBillid(sbjpa.findShoppingBillEntities().size()+1);
+        for( ShoppingCart sc1 : sc ){
+            ShoppingBillDetail sbd = new ShoppingBillDetail();
+            sbd.setShoppingBillDetailbill(sb);
+            sbd.setShoppingBillDetailseq(sbdjpa.findShoppingBillDetailEntities().size()+1);
+            sbd.setShoppingBillDetaildvdItem(sc1.getShoppingCartdvd());
+            sbd.setShoppingBillDetaildvdQty(sc1.getShoppingCartdvQty());
+            try {
+                scjpa.destroy(sc1.getShoppingCartid());
+            } catch (NonexistentEntityException ex) {
+                Logger.getLogger(CheckOutServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
+        request.getRequestDispatcher("ShoppingCart/checkout.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

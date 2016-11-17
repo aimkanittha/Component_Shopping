@@ -8,10 +8,20 @@ package component.controller;
 import component.ConstantsCtrl;
 import component.dao.ShoppingBillTable;
 import component.dao.ShoppingBillTableLocal;
+import component.jpa.DvdDataJpaController;
+import component.jpa.ShoppingCartJpaController;
+import component.jpa.exceptions.NonexistentEntityException;
+import component.model.DvdData;
+import component.model.MemberShop;
 import component.model.ShoppingBillDetail;
+import component.model.ShoppingCart;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,19 +32,40 @@ import javax.servlet.http.HttpServletResponse;
  * @author USER
  */
 public class RemoveItemServlet extends HttpServlet {
-    ShoppingBillTableLocal bill;
-    List<ShoppingBillDetail> bill_list;
+    ShoppingBillTableLocal sbt;
+    DvdDataJpaController dvdJpa;
+    ShoppingCartJpaController scjpa;
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("Component_ShoppingPU");
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            String prod_id = request.getParameter("remove");
-//            bill = new ShoppingBillTable();
-//            bill.removeItem(prod_id);
-//            bill_list = bill.findAll();
-            
-            request.getSession().setAttribute("billDetail", bill_list);
+        MemberShop member = ((MemberShop) request.getSession().getAttribute("member"));
+        int dvdId = Integer.parseInt((String) request.getParameter("remove") );
+        dvdJpa = new DvdDataJpaController(emf);
+        DvdData dvd = dvdJpa.findDvdData(dvdId);
+        scjpa = new ShoppingCartJpaController(emf);
+        ShoppingCart sc = scjpa.findMemberCart(member, dvd);
+        if( sc.getShoppingCartdvQty() > 1 ){
+            sc.setShoppingCartdvQty(sc.getShoppingCartdvQty()-1);
+            dvd.setDvdDataquantity(dvd.getDvdDataquantity()+1);
+            try {
+                scjpa.edit(sc);
+                dvdJpa.edit(dvd);
+            } catch (Exception ex) {
+                Logger.getLogger(RemoveItemServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }else{
+            dvd.setDvdDataquantity(dvd.getDvdDataquantity()+1);
+            try {
+                scjpa.destroy(sc.getShoppingCartid());
+                dvdJpa.edit(dvd);
+            } catch (NonexistentEntityException ex) {
+                Logger.getLogger(RemoveItemServlet.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(RemoveItemServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+        response.sendRedirect("showData");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

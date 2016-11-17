@@ -8,6 +8,7 @@ package component.model;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -60,7 +61,7 @@ public class MemberShop implements Serializable {
     private String memberaddress;
     @OneToMany(mappedBy = "shoppingBillmember")
     private List<ShoppingBill> shoppingBillList;
-    @OneToMany(mappedBy = "shoppingCartmember")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "shoppingCartmember")
     private List<ShoppingCart> shoppingCartList;
 
     public MemberShop() {

@@ -37,12 +37,14 @@ public class AddtoShoppingCartServlet extends HttpServlet {
     DvdDataJpaController dvdJpa;
     ShoppingCartJpaController scjpa;
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("Component_ShoppingPU");
+    Random rand;
     // @EJB
     // private CatalogDAOLocal ICatalog;
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        rand = new Random();
         int dvdId = Integer.parseInt((String) request.getParameter("action") );
         int qty = 1;//Integer.parseInt((String) request.getParameter("Quantity") );
 //        ShoppingBillJpaController spbjpa = new ShoppingBillJpaController(emf);
@@ -63,7 +65,7 @@ public class AddtoShoppingCartServlet extends HttpServlet {
             }
             if(scjpa.findMemberCart(member, dvdData)==null){
                 scart = new ShoppingCart();
-                scart.setShoppingCartid(scjpa.findShoppingCartEntities().size()+1);
+                scart.setShoppingCartid(rand.nextInt(99999999));
                 scart.setShoppingCartmember(member);
                 scart.setShoppingCartdvd(dvdJpa.findDvdData(dvdId));
                 scart.setShoppingCartdvQty(qty);

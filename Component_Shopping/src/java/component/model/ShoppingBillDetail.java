@@ -13,13 +13,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -45,12 +43,6 @@ public class ShoppingBillDetail implements Serializable {
     @NotNull
     @Column(name = "ShoppingBillDetail_dvdQty")
     private int shoppingBillDetaildvdQty;
-    @Basic(optional = false)
-    @NotNull
-    @Lob
-    @Size(min = 1, max = 65535)
-    @Column(name = "ShoppingBill_status")
-    private String shoppingBillstatus;
     @JoinColumn(name = "ShoppingBillDetail_bill", referencedColumnName = "ShoppingBill_id")
     @ManyToOne
     private ShoppingBill shoppingBillDetailbill;
@@ -65,10 +57,9 @@ public class ShoppingBillDetail implements Serializable {
         this.shoppingBillDetailseq = shoppingBillDetailseq;
     }
 
-    public ShoppingBillDetail(Integer shoppingBillDetailseq, int shoppingBillDetaildvdQty, String shoppingBillstatus) {
+    public ShoppingBillDetail(Integer shoppingBillDetailseq, int shoppingBillDetaildvdQty) {
         this.shoppingBillDetailseq = shoppingBillDetailseq;
         this.shoppingBillDetaildvdQty = shoppingBillDetaildvdQty;
-        this.shoppingBillstatus = shoppingBillstatus;
     }
 
     public Integer getShoppingBillDetailseq() {
@@ -85,14 +76,6 @@ public class ShoppingBillDetail implements Serializable {
 
     public void setShoppingBillDetaildvdQty(int shoppingBillDetaildvdQty) {
         this.shoppingBillDetaildvdQty = shoppingBillDetaildvdQty;
-    }
-
-    public String getShoppingBillstatus() {
-        return shoppingBillstatus;
-    }
-
-    public void setShoppingBillstatus(String shoppingBillstatus) {
-        this.shoppingBillstatus = shoppingBillstatus;
     }
 
     public ShoppingBill getShoppingBillDetailbill() {

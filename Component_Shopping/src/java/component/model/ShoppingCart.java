@@ -14,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -30,6 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "ShoppingCart.findAll", query = "SELECT s FROM ShoppingCart s")
     , @NamedQuery(name = "ShoppingCart.findByShoppingCartmember", query = "SELECT s FROM ShoppingCart s WHERE s.shoppingCartmember = :shoppingCartmember")
     , @NamedQuery(name = "ShoppingCart.findMemberCart", query = "SELECT s FROM ShoppingCart s WHERE s.shoppingCartmember = :shoppingCartmember AND s.shoppingCartdvd = :shoppingCartdvd")
+    , @NamedQuery(name = "ShoppingCart.findByShoppingCartid", query = "SELECT s FROM ShoppingCart s WHERE s.shoppingCartid = :shoppingCartid")
     , @NamedQuery(name = "ShoppingCart.findByShoppingCartdvQty", query = "SELECT s FROM ShoppingCart s WHERE s.shoppingCartdvQty = :shoppingCartdvQty")})
 public class ShoppingCart implements Serializable {
 
@@ -45,7 +45,7 @@ public class ShoppingCart implements Serializable {
     @ManyToOne
     private DvdData shoppingCartdvd;
     @JoinColumn(name = "ShoppingCart_member", referencedColumnName = "Member_id")
-    @OneToOne
+    @ManyToOne(optional = false)
     private MemberShop shoppingCartmember;
 
     public ShoppingCart() {
