@@ -218,5 +218,9 @@ public class ShoppingCartJpaController implements Serializable {
             em.close();
         }
     }
+
+    public void destroy(ShoppingCart sc) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
@@ -46,10 +47,12 @@ public class CheckOutServlet extends HttpServlet {
     ShoppingBillJpaController sbjpa;
     ShoppingBillDetailJpaController sbdjpa;
     MemberShopJpaController msjc;
+    Random ran;
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("Component_ShoppingPU");
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        ran = new Random();
         msjc = new MemberShopJpaController(emf);
         scjpa = new ShoppingCartJpaController(emf);
         sbjpa = new ShoppingBillJpaController(emf);
@@ -60,12 +63,16 @@ public class CheckOutServlet extends HttpServlet {
         ShoppingBill sb = new ShoppingBill();
         sb.setShoppingBillmember(member);
         sb.setShoppingBillid(sbjpa.findShoppingBillEntities().size()+1);
+        Double a = 0.0;
         for( ShoppingCart sc1 : sc ){
             ShoppingBillDetail sbd = new ShoppingBillDetail();
             sbd.setShoppingBillDetailbill(sb);
-            sbd.setShoppingBillDetailseq(sbdjpa.findShoppingBillDetailEntities().size()+1);
+            sbd.setShoppingBillDetailseq(ran.nextInt(999999));
             sbd.setShoppingBillDetaildvdItem(sc1.getShoppingCartdvd());
             sbd.setShoppingBillDetaildvdQty(sc1.getShoppingCartdvQty());
+            
+            a += sc1.getShoppingCartdvQty() * sc1.getShoppingCartdvd().getDvdDataprice();
+            sbdList.add(sbd);
             try {
                 scjpa.destroy(sc1.getShoppingCartid());
             } catch (NonexistentEntityException ex) {
@@ -73,6 +80,8 @@ public class CheckOutServlet extends HttpServlet {
             }
             
         }
+//        List<ShoppingBillDetail> shoppingBillList = sbdjpa.findShoppingBillDetailEntities();
+            request.getSession().setAttribute("detailCheckout", sbdList);
         request.getRequestDispatcher("ShoppingCart/checkout.jsp").forward(request, response);
     }
 

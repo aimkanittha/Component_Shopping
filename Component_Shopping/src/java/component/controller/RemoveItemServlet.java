@@ -41,30 +41,43 @@ public class RemoveItemServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         MemberShop member = ((MemberShop) request.getSession().getAttribute("member"));
         int dvdId = Integer.parseInt((String) request.getParameter("remove") );
-        dvdJpa = new DvdDataJpaController(emf);
-        DvdData dvd = dvdJpa.findDvdData(dvdId);
-        scjpa = new ShoppingCartJpaController(emf);
-        ShoppingCart sc = scjpa.findMemberCart(member, dvd);
-        if( sc.getShoppingCartdvQty() > 1 ){
-            sc.setShoppingCartdvQty(sc.getShoppingCartdvQty()-1);
-            dvd.setDvdDataquantity(dvd.getDvdDataquantity()+1);
-            try {
-                scjpa.edit(sc);
-                dvdJpa.edit(dvd);
-            } catch (Exception ex) {
-                Logger.getLogger(RemoveItemServlet.class.getName()).log(Level.SEVERE, null, ex);
+//        synchronized(request){
+            dvdJpa = new DvdDataJpaController(emf);
+            DvdData dvd = dvdJpa.findDvdData(dvdId);
+            scjpa = new ShoppingCartJpaController(emf);
+            ShoppingCart sc = scjpa.findMemberCart(member, dvd);
+            if(sc == null){
+                response.sendRedirect("showData");
             }
-        }else{
             dvd.setDvdDataquantity(dvd.getDvdDataquantity()+1);
-            try {
-                scjpa.destroy(sc.getShoppingCartid());
-                dvdJpa.edit(dvd);
-            } catch (NonexistentEntityException ex) {
-                Logger.getLogger(RemoveItemServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (Exception ex) {
-                Logger.getLogger(RemoveItemServlet.class.getName()).log(Level.SEVERE, null, ex);
+                try {
+                    dvdJpa.edit(dvd);
+                } catch (Exception ex) {
+                    Logger.getLogger(RemoveItemServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            if( sc.getShoppingCartdvQty() > 1 ){
+                sc.setShoppingCartdvQty(sc.getShoppingCartdvQty()-1);
+                try {
+                    scjpa.edit(sc);
+                } catch (Exception ex) {
+                    Logger.getLogger(RemoveItemServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }else if(sc.getShoppingCartdvQty() >= 0){
+                try {
+                    scjpa.destroy(sc.getShoppingCartid());
+                } catch (NonexistentEntityException ex) {
+                    Logger.getLogger(RemoveItemServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-        }
+            
+//                dvd.setDvdDataquantity(dvd.getDvdDataquantity()+1);
+//                try {
+//                    dvdJpa.edit(dvd);
+//                } catch (Exception ex) {
+//                    Logger.getLogger(RemoveItemServlet.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//        }
+        
         response.sendRedirect("showData");
     }
 
