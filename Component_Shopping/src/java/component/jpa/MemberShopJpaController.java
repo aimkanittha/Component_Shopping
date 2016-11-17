@@ -5,8 +5,8 @@
  */
 package component.jpa;
 
+import component.jpa.exceptions.IllegalOrphanException;
 import component.jpa.exceptions.NonexistentEntityException;
-import component.jpa.exceptions.PreexistingEntityException;
 import component.model.MemberShop;
 import java.io.Serializable;
 import javax.persistence.Query;
@@ -35,7 +35,7 @@ public class MemberShopJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(MemberShop memberShop) throws PreexistingEntityException, Exception {
+    public void create(MemberShop memberShop) {
         if (memberShop.getShoppingBillList() == null) {
             memberShop.setShoppingBillList(new ArrayList<ShoppingBill>());
         }
@@ -78,11 +78,6 @@ public class MemberShopJpaController implements Serializable {
                 }
             }
             em.getTransaction().commit();
-        } catch (Exception ex) {
-            if (findMemberShop(memberShop.getMemberid()) != null) {
-                throw new PreexistingEntityException("MemberShop " + memberShop + " already exists.", ex);
-            }
-            throw ex;
         } finally {
             if (em != null) {
                 em.close();
@@ -90,7 +85,7 @@ public class MemberShopJpaController implements Serializable {
         }
     }
 
-    public void edit(MemberShop memberShop) throws NonexistentEntityException, Exception {
+    public void edit(MemberShop memberShop) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -100,6 +95,18 @@ public class MemberShopJpaController implements Serializable {
             List<ShoppingBill> shoppingBillListNew = memberShop.getShoppingBillList();
             List<ShoppingCart> shoppingCartListOld = persistentMemberShop.getShoppingCartList();
             List<ShoppingCart> shoppingCartListNew = memberShop.getShoppingCartList();
+            List<String> illegalOrphanMessages = null;
+            for (ShoppingCart shoppingCartListOldShoppingCart : shoppingCartListOld) {
+                if (!shoppingCartListNew.contains(shoppingCartListOldShoppingCart)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain ShoppingCart " + shoppingCartListOldShoppingCart + " since its shoppingCartmember field is not nullable.");
+                }
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
             List<ShoppingBill> attachedShoppingBillListNew = new ArrayList<ShoppingBill>();
             for (ShoppingBill shoppingBillListNewShoppingBillToAttach : shoppingBillListNew) {
                 shoppingBillListNewShoppingBillToAttach = em.getReference(shoppingBillListNewShoppingBillToAttach.getClass(), shoppingBillListNewShoppingBillToAttach.getShoppingBillid());
@@ -132,12 +139,6 @@ public class MemberShopJpaController implements Serializable {
                     }
                 }
             }
-            for (ShoppingCart shoppingCartListOldShoppingCart : shoppingCartListOld) {
-                if (!shoppingCartListNew.contains(shoppingCartListOldShoppingCart)) {
-                    shoppingCartListOldShoppingCart.setShoppingCartmember(null);
-                    shoppingCartListOldShoppingCart = em.merge(shoppingCartListOldShoppingCart);
-                }
-            }
             for (ShoppingCart shoppingCartListNewShoppingCart : shoppingCartListNew) {
                 if (!shoppingCartListOld.contains(shoppingCartListNewShoppingCart)) {
                     MemberShop oldShoppingCartmemberOfShoppingCartListNewShoppingCart = shoppingCartListNewShoppingCart.getShoppingCartmember();
@@ -166,7 +167,7 @@ public class MemberShopJpaController implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws NonexistentEntityException {
+    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -178,15 +179,21 @@ public class MemberShopJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The memberShop with id " + id + " no longer exists.", enfe);
             }
+            List<String> illegalOrphanMessages = null;
+            List<ShoppingCart> shoppingCartListOrphanCheck = memberShop.getShoppingCartList();
+            for (ShoppingCart shoppingCartListOrphanCheckShoppingCart : shoppingCartListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This MemberShop (" + memberShop + ") cannot be destroyed since the ShoppingCart " + shoppingCartListOrphanCheckShoppingCart + " in its shoppingCartList field has a non-nullable shoppingCartmember field.");
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
             List<ShoppingBill> shoppingBillList = memberShop.getShoppingBillList();
             for (ShoppingBill shoppingBillListShoppingBill : shoppingBillList) {
                 shoppingBillListShoppingBill.setShoppingBillmember(null);
                 shoppingBillListShoppingBill = em.merge(shoppingBillListShoppingBill);
-            }
-            List<ShoppingCart> shoppingCartList = memberShop.getShoppingCartList();
-            for (ShoppingCart shoppingCartListShoppingCart : shoppingCartList) {
-                shoppingCartListShoppingCart.setShoppingCartmember(null);
-                shoppingCartListShoppingCart = em.merge(shoppingCartListShoppingCart);
             }
             em.remove(memberShop);
             em.getTransaction().commit();

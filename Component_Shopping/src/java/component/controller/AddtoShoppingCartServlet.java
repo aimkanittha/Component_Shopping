@@ -65,7 +65,7 @@ public class AddtoShoppingCartServlet extends HttpServlet {
             }
             if(scjpa.findMemberCart(member, dvdData)==null){
                 scart = new ShoppingCart();
-                scart.setShoppingCartid(rand.nextInt(99999999));
+//                scart.setShoppingCartid(rand.nextInt(99999999));
                 scart.setShoppingCartmember(member);
                 scart.setShoppingCartdvd(dvdJpa.findDvdData(dvdId));
                 scart.setShoppingCartdvQty(qty);

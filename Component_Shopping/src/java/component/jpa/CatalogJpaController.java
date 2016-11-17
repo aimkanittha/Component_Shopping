@@ -6,7 +6,6 @@
 package component.jpa;
 
 import component.jpa.exceptions.NonexistentEntityException;
-import component.jpa.exceptions.PreexistingEntityException;
 import component.model.Catalog;
 import java.io.Serializable;
 import javax.persistence.Query;
@@ -34,7 +33,7 @@ public class CatalogJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Catalog catalog) throws PreexistingEntityException, Exception {
+    public void create(Catalog catalog) {
         if (catalog.getDvdDataList() == null) {
             catalog.setDvdDataList(new ArrayList<DvdData>());
         }
@@ -59,11 +58,6 @@ public class CatalogJpaController implements Serializable {
                 }
             }
             em.getTransaction().commit();
-        } catch (Exception ex) {
-            if (findCatalog(catalog.getCatelogseq()) != null) {
-                throw new PreexistingEntityException("Catalog " + catalog + " already exists.", ex);
-            }
-            throw ex;
         } finally {
             if (em != null) {
                 em.close();

@@ -4,6 +4,7 @@
     Author     : wachirapong
 --%>
 
+<%@page import="component.model.MemberShop"%>
 <%@page import="component.model.ShoppingBillDetail"%>
 <%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -62,7 +63,11 @@
             out.print("<br>");
             out.print("<p> Total item quantity : "+quantity+"</p>");
             out.print("<p> Total price : "+sum+"</p>");
+            
+            MemberShop member = (MemberShop)request.getSession().getAttribute("member");
     %>
-        
+        จัดส่งคุณ <%= member.getMemberfirstname() %>  <%=member.getMemberlastname()%> <br>
+        ที่อยู่จัดส่ง <%= member.getMemberaddress() %>
+        <center><a href="showData">Back</a></center>
     </body>
 </html>

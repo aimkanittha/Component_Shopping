@@ -48,6 +48,7 @@ public class RemoveItemServlet extends HttpServlet {
             ShoppingCart sc = scjpa.findMemberCart(member, dvd);
             if(sc == null){
                 response.sendRedirect("showData");
+                return;
             }
             dvd.setDvdDataquantity(dvd.getDvdDataquantity()+1);
                 try {
@@ -69,15 +70,6 @@ public class RemoveItemServlet extends HttpServlet {
                     Logger.getLogger(RemoveItemServlet.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            
-//                dvd.setDvdDataquantity(dvd.getDvdDataquantity()+1);
-//                try {
-//                    dvdJpa.edit(dvd);
-//                } catch (Exception ex) {
-//                    Logger.getLogger(RemoveItemServlet.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//        }
-        
         response.sendRedirect("showData");
     }
 

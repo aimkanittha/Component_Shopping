@@ -23,7 +23,8 @@
         </style>
     </head>
     <body>
-       
+        <% MemberShop member = (MemberShop)request.getSession().getAttribute("member"); %>
+       สวัสดีคุณ <%= member.getMemberfirstname() %> <%= member.getMemberlastname() %> <a href="logout">Log Out</a>
         <form action="showData" method="POST">
             <center><h1>Welcome to Shopping DVD</h1></center>
             <center><h2>DVD Catalog</h2></center>
@@ -131,7 +132,7 @@
         </form>
         
     <br><br><br>
-    <center><a href="checkOut">Check out</a></center>
+    <% if (listSize>0){  out.print("<center><a href=\"checkOut\">Check out</a></center>");  } %>
         
     </body>
 </html>

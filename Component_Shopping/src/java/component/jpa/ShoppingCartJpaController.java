@@ -201,7 +201,7 @@ public class ShoppingCartJpaController implements Serializable {
     public ShoppingCart findMemberCart(MemberShop member,DvdData dvd){
         EntityManager em = getEntityManager();
         List<ShoppingCart> query = em.createNamedQuery("ShoppingCart.findMemberCart").setParameter("shoppingCartmember", member).setParameter("shoppingCartdvd", dvd).getResultList();
-        if( query.size() == 0)
+        if( query.isEmpty())
            return null;
        return query.get(0);
     }

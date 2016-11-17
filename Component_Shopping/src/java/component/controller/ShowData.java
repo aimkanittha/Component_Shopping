@@ -47,6 +47,10 @@ public class ShowData extends HttpServlet {
         dvd_list = dvd.getAllDvd();
         scjpa = new ShoppingCartJpaController(emf);
         MemberShop member = (MemberShop)request.getSession().getAttribute("member");
+        if( member == null ){
+            response.sendRedirect("LoginController");
+            return;
+        }
         
 //        bill = new ShoppingBillTable();
 //        

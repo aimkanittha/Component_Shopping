@@ -6,7 +6,6 @@
 package component.jpa;
 
 import component.jpa.exceptions.NonexistentEntityException;
-import component.jpa.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -35,7 +34,7 @@ public class ShoppingBillJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(ShoppingBill shoppingBill) throws PreexistingEntityException, Exception {
+    public void create(ShoppingBill shoppingBill) {
         if (shoppingBill.getShoppingBillDetailList() == null) {
             shoppingBill.setShoppingBillDetailList(new ArrayList<ShoppingBillDetail>());
         }
@@ -69,11 +68,6 @@ public class ShoppingBillJpaController implements Serializable {
                 }
             }
             em.getTransaction().commit();
-        } catch (Exception ex) {
-            if (findShoppingBill(shoppingBill.getShoppingBillid()) != null) {
-                throw new PreexistingEntityException("ShoppingBill " + shoppingBill + " already exists.", ex);
-            }
-            throw ex;
         } finally {
             if (em != null) {
                 em.close();

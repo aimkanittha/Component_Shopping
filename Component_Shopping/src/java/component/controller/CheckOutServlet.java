@@ -58,30 +58,49 @@ public class CheckOutServlet extends HttpServlet {
         sbjpa = new ShoppingBillJpaController(emf);
         sbdjpa = new ShoppingBillDetailJpaController(emf);
         MemberShop member = ((MemberShop) request.getSession().getAttribute("member"));
+        if( member == null ){
+            response.sendRedirect("LoginController");
+            return;
+        }
         List<ShoppingCart> sc = scjpa.getMemberCart(member);
+        if( sc.isEmpty() ){
+            response.sendRedirect("showData");
+                return;
+        }
+        
         List<ShoppingBillDetail> sbdList = new ArrayList<ShoppingBillDetail>();
-        ShoppingBill sb = new ShoppingBill();
+        ShoppingBill sb;
+        sb = new ShoppingBill();
         sb.setShoppingBillmember(member);
-        sb.setShoppingBillid(sbjpa.findShoppingBillEntities().size()+1);
-        Double a = 0.0;
+        Double total = 0.0;
         for( ShoppingCart sc1 : sc ){
             ShoppingBillDetail sbd = new ShoppingBillDetail();
-            sbd.setShoppingBillDetailbill(sb);
+//            sbd.setShoppingBillDetailbill(sb);
             sbd.setShoppingBillDetailseq(ran.nextInt(999999));
             sbd.setShoppingBillDetaildvdItem(sc1.getShoppingCartdvd());
             sbd.setShoppingBillDetaildvdQty(sc1.getShoppingCartdvQty());
             
-            a += sc1.getShoppingCartdvQty() * sc1.getShoppingCartdvd().getDvdDataprice();
-            sbdList.add(sbd);
-            try {
+            total += sc1.getShoppingCartdvQty() * sc1.getShoppingCartdvd().getDvdDataprice();
+            sbdList.add(sbd); 
+        }
+        
+        sb.setShoppingBilltotal(total);
+        try {
+            sbjpa.create(sb);
+            for( ShoppingBillDetail sbd : sbdList ){
+                sbd.setShoppingBillDetailbill(sb);
+                sbdjpa.create(sbd);
+            }for( ShoppingCart sc1 : sc ){
                 scjpa.destroy(sc1.getShoppingCartid());
-            } catch (NonexistentEntityException ex) {
-                Logger.getLogger(CheckOutServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+        }catch (NonexistentEntityException ex) {
+            Logger.getLogger(CheckOutServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (Exception ex) {
+            Logger.getLogger(CheckOutServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
 //        List<ShoppingBillDetail> shoppingBillList = sbdjpa.findShoppingBillDetailEntities();
-            request.getSession().setAttribute("detailCheckout", sbdList);
+        request.getSession().setAttribute("detailCheckout", sbdList);
         request.getRequestDispatcher("ShoppingCart/checkout.jsp").forward(request, response);
     }
 

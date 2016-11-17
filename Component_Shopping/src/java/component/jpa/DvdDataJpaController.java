@@ -6,7 +6,6 @@
 package component.jpa;
 
 import component.jpa.exceptions.NonexistentEntityException;
-import component.jpa.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -14,10 +13,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import component.model.Catalog;
 import component.model.DvdData;
-import component.model.ShoppingBillDetail;
+import component.model.ShoppingCart;
 import java.util.ArrayList;
 import java.util.List;
-import component.model.ShoppingCart;
+import component.model.ShoppingBillDetail;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
@@ -36,12 +35,12 @@ public class DvdDataJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(DvdData dvdData) throws PreexistingEntityException, Exception {
-        if (dvdData.getShoppingBillDetailList() == null) {
-            dvdData.setShoppingBillDetailList(new ArrayList<ShoppingBillDetail>());
-        }
+    public void create(DvdData dvdData) {
         if (dvdData.getShoppingCartList() == null) {
             dvdData.setShoppingCartList(new ArrayList<ShoppingCart>());
+        }
+        if (dvdData.getShoppingBillDetailList() == null) {
+            dvdData.setShoppingBillDetailList(new ArrayList<ShoppingBillDetail>());
         }
         EntityManager em = null;
         try {
@@ -52,31 +51,22 @@ public class DvdDataJpaController implements Serializable {
                 dvdDatacatalog = em.getReference(dvdDatacatalog.getClass(), dvdDatacatalog.getCatelogseq());
                 dvdData.setDvdDatacatalog(dvdDatacatalog);
             }
-            List<ShoppingBillDetail> attachedShoppingBillDetailList = new ArrayList<ShoppingBillDetail>();
-            for (ShoppingBillDetail shoppingBillDetailListShoppingBillDetailToAttach : dvdData.getShoppingBillDetailList()) {
-                shoppingBillDetailListShoppingBillDetailToAttach = em.getReference(shoppingBillDetailListShoppingBillDetailToAttach.getClass(), shoppingBillDetailListShoppingBillDetailToAttach.getShoppingBillDetailseq());
-                attachedShoppingBillDetailList.add(shoppingBillDetailListShoppingBillDetailToAttach);
-            }
-            dvdData.setShoppingBillDetailList(attachedShoppingBillDetailList);
             List<ShoppingCart> attachedShoppingCartList = new ArrayList<ShoppingCart>();
             for (ShoppingCart shoppingCartListShoppingCartToAttach : dvdData.getShoppingCartList()) {
                 shoppingCartListShoppingCartToAttach = em.getReference(shoppingCartListShoppingCartToAttach.getClass(), shoppingCartListShoppingCartToAttach.getShoppingCartid());
                 attachedShoppingCartList.add(shoppingCartListShoppingCartToAttach);
             }
             dvdData.setShoppingCartList(attachedShoppingCartList);
+            List<ShoppingBillDetail> attachedShoppingBillDetailList = new ArrayList<ShoppingBillDetail>();
+            for (ShoppingBillDetail shoppingBillDetailListShoppingBillDetailToAttach : dvdData.getShoppingBillDetailList()) {
+                shoppingBillDetailListShoppingBillDetailToAttach = em.getReference(shoppingBillDetailListShoppingBillDetailToAttach.getClass(), shoppingBillDetailListShoppingBillDetailToAttach.getShoppingBillDetailseq());
+                attachedShoppingBillDetailList.add(shoppingBillDetailListShoppingBillDetailToAttach);
+            }
+            dvdData.setShoppingBillDetailList(attachedShoppingBillDetailList);
             em.persist(dvdData);
             if (dvdDatacatalog != null) {
                 dvdDatacatalog.getDvdDataList().add(dvdData);
                 dvdDatacatalog = em.merge(dvdDatacatalog);
-            }
-            for (ShoppingBillDetail shoppingBillDetailListShoppingBillDetail : dvdData.getShoppingBillDetailList()) {
-                DvdData oldShoppingBillDetaildvdItemOfShoppingBillDetailListShoppingBillDetail = shoppingBillDetailListShoppingBillDetail.getShoppingBillDetaildvdItem();
-                shoppingBillDetailListShoppingBillDetail.setShoppingBillDetaildvdItem(dvdData);
-                shoppingBillDetailListShoppingBillDetail = em.merge(shoppingBillDetailListShoppingBillDetail);
-                if (oldShoppingBillDetaildvdItemOfShoppingBillDetailListShoppingBillDetail != null) {
-                    oldShoppingBillDetaildvdItemOfShoppingBillDetailListShoppingBillDetail.getShoppingBillDetailList().remove(shoppingBillDetailListShoppingBillDetail);
-                    oldShoppingBillDetaildvdItemOfShoppingBillDetailListShoppingBillDetail = em.merge(oldShoppingBillDetaildvdItemOfShoppingBillDetailListShoppingBillDetail);
-                }
             }
             for (ShoppingCart shoppingCartListShoppingCart : dvdData.getShoppingCartList()) {
                 DvdData oldShoppingCartdvdOfShoppingCartListShoppingCart = shoppingCartListShoppingCart.getShoppingCartdvd();
@@ -87,12 +77,16 @@ public class DvdDataJpaController implements Serializable {
                     oldShoppingCartdvdOfShoppingCartListShoppingCart = em.merge(oldShoppingCartdvdOfShoppingCartListShoppingCart);
                 }
             }
-            em.getTransaction().commit();
-        } catch (Exception ex) {
-            if (findDvdData(dvdData.getDvdDataid()) != null) {
-                throw new PreexistingEntityException("DvdData " + dvdData + " already exists.", ex);
+            for (ShoppingBillDetail shoppingBillDetailListShoppingBillDetail : dvdData.getShoppingBillDetailList()) {
+                DvdData oldShoppingBillDetaildvdItemOfShoppingBillDetailListShoppingBillDetail = shoppingBillDetailListShoppingBillDetail.getShoppingBillDetaildvdItem();
+                shoppingBillDetailListShoppingBillDetail.setShoppingBillDetaildvdItem(dvdData);
+                shoppingBillDetailListShoppingBillDetail = em.merge(shoppingBillDetailListShoppingBillDetail);
+                if (oldShoppingBillDetaildvdItemOfShoppingBillDetailListShoppingBillDetail != null) {
+                    oldShoppingBillDetaildvdItemOfShoppingBillDetailListShoppingBillDetail.getShoppingBillDetailList().remove(shoppingBillDetailListShoppingBillDetail);
+                    oldShoppingBillDetaildvdItemOfShoppingBillDetailListShoppingBillDetail = em.merge(oldShoppingBillDetaildvdItemOfShoppingBillDetailListShoppingBillDetail);
+                }
             }
-            throw ex;
+            em.getTransaction().commit();
         } finally {
             if (em != null) {
                 em.close();
@@ -108,21 +102,14 @@ public class DvdDataJpaController implements Serializable {
             DvdData persistentDvdData = em.find(DvdData.class, dvdData.getDvdDataid());
             Catalog dvdDatacatalogOld = persistentDvdData.getDvdDatacatalog();
             Catalog dvdDatacatalogNew = dvdData.getDvdDatacatalog();
-            List<ShoppingBillDetail> shoppingBillDetailListOld = persistentDvdData.getShoppingBillDetailList();
-            List<ShoppingBillDetail> shoppingBillDetailListNew = dvdData.getShoppingBillDetailList();
             List<ShoppingCart> shoppingCartListOld = persistentDvdData.getShoppingCartList();
             List<ShoppingCart> shoppingCartListNew = dvdData.getShoppingCartList();
+            List<ShoppingBillDetail> shoppingBillDetailListOld = persistentDvdData.getShoppingBillDetailList();
+            List<ShoppingBillDetail> shoppingBillDetailListNew = dvdData.getShoppingBillDetailList();
             if (dvdDatacatalogNew != null) {
                 dvdDatacatalogNew = em.getReference(dvdDatacatalogNew.getClass(), dvdDatacatalogNew.getCatelogseq());
                 dvdData.setDvdDatacatalog(dvdDatacatalogNew);
             }
-            List<ShoppingBillDetail> attachedShoppingBillDetailListNew = new ArrayList<ShoppingBillDetail>();
-            for (ShoppingBillDetail shoppingBillDetailListNewShoppingBillDetailToAttach : shoppingBillDetailListNew) {
-                shoppingBillDetailListNewShoppingBillDetailToAttach = em.getReference(shoppingBillDetailListNewShoppingBillDetailToAttach.getClass(), shoppingBillDetailListNewShoppingBillDetailToAttach.getShoppingBillDetailseq());
-                attachedShoppingBillDetailListNew.add(shoppingBillDetailListNewShoppingBillDetailToAttach);
-            }
-            shoppingBillDetailListNew = attachedShoppingBillDetailListNew;
-            dvdData.setShoppingBillDetailList(shoppingBillDetailListNew);
             List<ShoppingCart> attachedShoppingCartListNew = new ArrayList<ShoppingCart>();
             for (ShoppingCart shoppingCartListNewShoppingCartToAttach : shoppingCartListNew) {
                 shoppingCartListNewShoppingCartToAttach = em.getReference(shoppingCartListNewShoppingCartToAttach.getClass(), shoppingCartListNewShoppingCartToAttach.getShoppingCartid());
@@ -130,6 +117,13 @@ public class DvdDataJpaController implements Serializable {
             }
             shoppingCartListNew = attachedShoppingCartListNew;
             dvdData.setShoppingCartList(shoppingCartListNew);
+            List<ShoppingBillDetail> attachedShoppingBillDetailListNew = new ArrayList<ShoppingBillDetail>();
+            for (ShoppingBillDetail shoppingBillDetailListNewShoppingBillDetailToAttach : shoppingBillDetailListNew) {
+                shoppingBillDetailListNewShoppingBillDetailToAttach = em.getReference(shoppingBillDetailListNewShoppingBillDetailToAttach.getClass(), shoppingBillDetailListNewShoppingBillDetailToAttach.getShoppingBillDetailseq());
+                attachedShoppingBillDetailListNew.add(shoppingBillDetailListNewShoppingBillDetailToAttach);
+            }
+            shoppingBillDetailListNew = attachedShoppingBillDetailListNew;
+            dvdData.setShoppingBillDetailList(shoppingBillDetailListNew);
             dvdData = em.merge(dvdData);
             if (dvdDatacatalogOld != null && !dvdDatacatalogOld.equals(dvdDatacatalogNew)) {
                 dvdDatacatalogOld.getDvdDataList().remove(dvdData);
@@ -138,23 +132,6 @@ public class DvdDataJpaController implements Serializable {
             if (dvdDatacatalogNew != null && !dvdDatacatalogNew.equals(dvdDatacatalogOld)) {
                 dvdDatacatalogNew.getDvdDataList().add(dvdData);
                 dvdDatacatalogNew = em.merge(dvdDatacatalogNew);
-            }
-            for (ShoppingBillDetail shoppingBillDetailListOldShoppingBillDetail : shoppingBillDetailListOld) {
-                if (!shoppingBillDetailListNew.contains(shoppingBillDetailListOldShoppingBillDetail)) {
-                    shoppingBillDetailListOldShoppingBillDetail.setShoppingBillDetaildvdItem(null);
-                    shoppingBillDetailListOldShoppingBillDetail = em.merge(shoppingBillDetailListOldShoppingBillDetail);
-                }
-            }
-            for (ShoppingBillDetail shoppingBillDetailListNewShoppingBillDetail : shoppingBillDetailListNew) {
-                if (!shoppingBillDetailListOld.contains(shoppingBillDetailListNewShoppingBillDetail)) {
-                    DvdData oldShoppingBillDetaildvdItemOfShoppingBillDetailListNewShoppingBillDetail = shoppingBillDetailListNewShoppingBillDetail.getShoppingBillDetaildvdItem();
-                    shoppingBillDetailListNewShoppingBillDetail.setShoppingBillDetaildvdItem(dvdData);
-                    shoppingBillDetailListNewShoppingBillDetail = em.merge(shoppingBillDetailListNewShoppingBillDetail);
-                    if (oldShoppingBillDetaildvdItemOfShoppingBillDetailListNewShoppingBillDetail != null && !oldShoppingBillDetaildvdItemOfShoppingBillDetailListNewShoppingBillDetail.equals(dvdData)) {
-                        oldShoppingBillDetaildvdItemOfShoppingBillDetailListNewShoppingBillDetail.getShoppingBillDetailList().remove(shoppingBillDetailListNewShoppingBillDetail);
-                        oldShoppingBillDetaildvdItemOfShoppingBillDetailListNewShoppingBillDetail = em.merge(oldShoppingBillDetaildvdItemOfShoppingBillDetailListNewShoppingBillDetail);
-                    }
-                }
             }
             for (ShoppingCart shoppingCartListOldShoppingCart : shoppingCartListOld) {
                 if (!shoppingCartListNew.contains(shoppingCartListOldShoppingCart)) {
@@ -170,6 +147,23 @@ public class DvdDataJpaController implements Serializable {
                     if (oldShoppingCartdvdOfShoppingCartListNewShoppingCart != null && !oldShoppingCartdvdOfShoppingCartListNewShoppingCart.equals(dvdData)) {
                         oldShoppingCartdvdOfShoppingCartListNewShoppingCart.getShoppingCartList().remove(shoppingCartListNewShoppingCart);
                         oldShoppingCartdvdOfShoppingCartListNewShoppingCart = em.merge(oldShoppingCartdvdOfShoppingCartListNewShoppingCart);
+                    }
+                }
+            }
+            for (ShoppingBillDetail shoppingBillDetailListOldShoppingBillDetail : shoppingBillDetailListOld) {
+                if (!shoppingBillDetailListNew.contains(shoppingBillDetailListOldShoppingBillDetail)) {
+                    shoppingBillDetailListOldShoppingBillDetail.setShoppingBillDetaildvdItem(null);
+                    shoppingBillDetailListOldShoppingBillDetail = em.merge(shoppingBillDetailListOldShoppingBillDetail);
+                }
+            }
+            for (ShoppingBillDetail shoppingBillDetailListNewShoppingBillDetail : shoppingBillDetailListNew) {
+                if (!shoppingBillDetailListOld.contains(shoppingBillDetailListNewShoppingBillDetail)) {
+                    DvdData oldShoppingBillDetaildvdItemOfShoppingBillDetailListNewShoppingBillDetail = shoppingBillDetailListNewShoppingBillDetail.getShoppingBillDetaildvdItem();
+                    shoppingBillDetailListNewShoppingBillDetail.setShoppingBillDetaildvdItem(dvdData);
+                    shoppingBillDetailListNewShoppingBillDetail = em.merge(shoppingBillDetailListNewShoppingBillDetail);
+                    if (oldShoppingBillDetaildvdItemOfShoppingBillDetailListNewShoppingBillDetail != null && !oldShoppingBillDetaildvdItemOfShoppingBillDetailListNewShoppingBillDetail.equals(dvdData)) {
+                        oldShoppingBillDetaildvdItemOfShoppingBillDetailListNewShoppingBillDetail.getShoppingBillDetailList().remove(shoppingBillDetailListNewShoppingBillDetail);
+                        oldShoppingBillDetaildvdItemOfShoppingBillDetailListNewShoppingBillDetail = em.merge(oldShoppingBillDetaildvdItemOfShoppingBillDetailListNewShoppingBillDetail);
                     }
                 }
             }
@@ -207,15 +201,15 @@ public class DvdDataJpaController implements Serializable {
                 dvdDatacatalog.getDvdDataList().remove(dvdData);
                 dvdDatacatalog = em.merge(dvdDatacatalog);
             }
-            List<ShoppingBillDetail> shoppingBillDetailList = dvdData.getShoppingBillDetailList();
-            for (ShoppingBillDetail shoppingBillDetailListShoppingBillDetail : shoppingBillDetailList) {
-                shoppingBillDetailListShoppingBillDetail.setShoppingBillDetaildvdItem(null);
-                shoppingBillDetailListShoppingBillDetail = em.merge(shoppingBillDetailListShoppingBillDetail);
-            }
             List<ShoppingCart> shoppingCartList = dvdData.getShoppingCartList();
             for (ShoppingCart shoppingCartListShoppingCart : shoppingCartList) {
                 shoppingCartListShoppingCart.setShoppingCartdvd(null);
                 shoppingCartListShoppingCart = em.merge(shoppingCartListShoppingCart);
+            }
+            List<ShoppingBillDetail> shoppingBillDetailList = dvdData.getShoppingBillDetailList();
+            for (ShoppingBillDetail shoppingBillDetailListShoppingBillDetail : shoppingBillDetailList) {
+                shoppingBillDetailListShoppingBillDetail.setShoppingBillDetaildvdItem(null);
+                shoppingBillDetailListShoppingBillDetail = em.merge(shoppingBillDetailListShoppingBillDetail);
             }
             em.remove(dvdData);
             em.getTransaction().commit();
