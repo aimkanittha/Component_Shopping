@@ -79,7 +79,6 @@ public class CheckOutServlet extends HttpServlet {
             sbd.setShoppingBillDetailseq(ran.nextInt(999999));
             sbd.setShoppingBillDetaildvdItem(sc1.getShoppingCartdvd());
             sbd.setShoppingBillDetaildvdQty(sc1.getShoppingCartdvQty());
-            
             total += sc1.getShoppingCartdvQty() * sc1.getShoppingCartdvd().getDvdDataprice();
             sbdList.add(sbd); 
         }

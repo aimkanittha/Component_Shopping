@@ -46,6 +46,10 @@ public class AddtoShoppingCartServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         rand = new Random();
+        if(request.getParameter("action") == null || request.getSession().getAttribute("member")==null){
+            response.sendRedirect("showData");
+            return;
+        }
         int dvdId = Integer.parseInt((String) request.getParameter("action") );
         String qtyStr = request.getParameter("quantity"+dvdId);
         int qty = (qtyStr == "" ? 1 : Integer.parseInt(qtyStr));
@@ -55,18 +59,20 @@ public class AddtoShoppingCartServlet extends HttpServlet {
         scjpa = new ShoppingCartJpaController(emf);
         MemberShop member = ((MemberShop) request.getSession().getAttribute("member"));
         ShoppingCart scart;
-        synchronized(getServletContext()){
+        synchronized(request){
             EntityManager em = emf.createEntityManager();
             em.getTransaction().begin();
             try{
                 DvdData dvdData = em.find(DvdData.class, dvdId);
-                em.lock(dvdData, LockModeType.PESSIMISTIC_WRITE);
-                em.persist(dvdData);
+                System.out.println("TRY Success");
                 if(dvdData.getDvdDataquantity()<qty){
+                    em.getTransaction().commit();
+//                    em.close();
                     response.sendRedirect("showData");
-                    em.close();
                     return;
                 }
+                em.lock(dvdData, LockModeType.PESSIMISTIC_WRITE);
+                em.persist(dvdData);
                 if( scjpa.findMemberCart(em,member, dvdData)==null ){
                     scart = new ShoppingCart();
                     scart.setShoppingCartmember(member);
@@ -82,9 +88,11 @@ public class AddtoShoppingCartServlet extends HttpServlet {
                 }
                 em.getTransaction().commit();
             }catch( Exception e){
+                System.out.println("TRY Success");
                 em.getTransaction().rollback();
             }finally{
                 em.close();
+//                response.sendRedirect("showData");
             }
             //
             //
