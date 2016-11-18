@@ -45,7 +45,7 @@ public class Catalog implements Serializable {
     @Column(name = "Catalog_quantity")
     private Integer catalogquantity;
     @Column(name = "Catalog_typeName")
-    private Integer catalogtypeName;
+    private String catalogtypeName;
     @OneToMany(mappedBy = "dvdDatacatalog")
     private List<DvdData> dvdDataList;
 
@@ -72,11 +72,11 @@ public class Catalog implements Serializable {
         this.catalogquantity = catalogquantity;
     }
 
-    public Integer getCatalogtypeName() {
+    public String getCatalogtypeName() {
         return catalogtypeName;
     }
 
-    public void setCatalogtypeName(Integer catalogtypeName) {
+    public void setCatalogtypeName(String catalogtypeName) {
         this.catalogtypeName = catalogtypeName;
     }
 

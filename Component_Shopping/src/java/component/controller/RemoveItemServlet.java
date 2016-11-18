@@ -5,7 +5,6 @@
  */
 package component.controller;
 
-import component.ConstantsCtrl;
 import component.dao.ShoppingBillTable;
 import component.dao.ShoppingBillTableLocal;
 import component.jpa.DvdDataJpaController;

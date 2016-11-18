@@ -16,6 +16,7 @@
     </head>
     <body>
     <center><h1>Checkout</h1></center>
+    <center>
     <% 
         List<ShoppingBillDetail> shoppingBill = (List<ShoppingBillDetail>) request.getSession().getAttribute("detailCheckout");
             int shoppingBillSize = shoppingBill.size();
@@ -66,6 +67,7 @@
             
             MemberShop member = (MemberShop)request.getSession().getAttribute("member");
     %>
+    </center>
         จัดส่งคุณ <%= member.getMemberfirstname() %>  <%=member.getMemberlastname()%> <br>
         ที่อยู่จัดส่ง <%= member.getMemberaddress() %>
         <center><a href="showData">Back</a></center>

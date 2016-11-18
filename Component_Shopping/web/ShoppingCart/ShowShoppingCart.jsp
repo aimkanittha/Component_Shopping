@@ -38,7 +38,7 @@
                     <th>Price</th>
                     <th>Quantity On Hand</th>
                     <th>Quantity</th>
-                    <th>Add Card</th>
+                    <th>Add Cart</th>
                 </tr>
                <%
                    try{
@@ -69,7 +69,7 @@
                             out.println("<input type='number' name='quantity"+list.get(i).getDvdDataid()+"' value='1' min='1' max='"+list.get(i).getDvdDataquantity()+"'  />");
                         out.println("</td>");
                         out.println("<td>");
-                            out.println("<button style='width:100%' type='submit' name='action' onclick=\"form.action='addItem';\" value='"+list.get(i).getDvdDataid()+"'>AddToCard </button>");
+                            out.println("<button style='width:100%' type='submit' name='action' onclick=\"form.action='addItem';\" value='"+list.get(i).getDvdDataid()+"'>AddToCart </button>");
                         out.println("</td>");
                         out.println("</tr>");
                    } 
@@ -95,7 +95,7 @@
                out.println("<th>Year</th>");
                out.println("<th>Price</th>");
                out.println("<th>Quantity</th>");
-               out.println("<th>Remove Card</th></tr>");
+               out.println("<th>Remove Cart</th></tr>");
                for(int i=0; i < listSize ;i++){
                         out.println("<tr>");
                         out.println("<td>");

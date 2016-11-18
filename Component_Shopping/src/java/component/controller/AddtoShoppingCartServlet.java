@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import component.model.*;
 
-import component.ConstantsCtrl;
 import component.dao.ShoppingBillTableLocal;
 import component.jpa.DvdDataJpaController;
 import component.jpa.ShoppingBillJpaController;
@@ -48,7 +47,8 @@ public class AddtoShoppingCartServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         rand = new Random();
         int dvdId = Integer.parseInt((String) request.getParameter("action") );
-        int qty = Integer.parseInt((String) request.getParameter("quantity"+dvdId) );
+        String qtyStr = request.getParameter("quantity"+dvdId);
+        int qty = (qtyStr == "" ? 1 : Integer.parseInt(qtyStr));
 //        ShoppingBillJpaController spbjpa = new ShoppingBillJpaController(emf);
 //        ShoppingBill spb = ShoppingBill();
         dvdJpa = new DvdDataJpaController(emf);
