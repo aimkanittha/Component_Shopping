@@ -62,7 +62,7 @@
                             out.println("<input style='width:100%' type='number' name='quantity"+list.get(i).getDvdDataid()+"' value='1' min='1' max='"+list.get(i).getDvdDataquantity()+"'  />");
                         out.println("</td>");
                         out.println("<td>");
-                            out.println("<button style='width:100%' type='submit' name='action' onclick=\"form.action='addItem';\" value='"+list.get(i).getDvdDataid()+"'>AddToCart </button>");
+                            out.println("<button style='width:100%;background:#00cc99;' type='submit' name='action' onclick=\"form.action='addItem';\" value='"+list.get(i).getDvdDataid()+"'>AddToCart </button>");
                         out.println("</td>");
                         out.println("</tr>");
                    } 
@@ -113,7 +113,7 @@
                             out.println("<input style='width:100%' type='text' name='Quautity"+i+"' value='"+listShop.get(i).getShoppingCartdvQty()+"' readonly />");
                         out.println("</td>");
                         out.println("<td>");
-                            out.println("<button style='width:100%;margin:10px auto;' type='submit' name='remove' value='"+listShop.get(i).getShoppingCartdvd().getDvdDataid()+"' onclick=\"form.action='removeItem';\" value='"+listShop.get(i).getShoppingCartdvd()+"'>Remove</button>");
+                            out.println("<button style='width:100%;margin:10px auto;background:#ff6666;' type='submit' name='remove' value='"+listShop.get(i).getShoppingCartdvd().getDvdDataid()+"' onclick=\"form.action='removeItem';\" value='"+listShop.get(i).getShoppingCartdvd()+"'>Remove</button>");
                         out.println("</td>");
                         out.println("</tr>");
                }

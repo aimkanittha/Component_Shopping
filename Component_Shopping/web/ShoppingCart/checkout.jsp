@@ -71,6 +71,6 @@
     </center>
         จัดส่งคุณ <%= member.getMemberfirstname() %>  <%=member.getMemberlastname()%> <br>
         ที่อยู่จัดส่ง <%= member.getMemberaddress() %>
-        <center><a href="showData">Back</a></center>
+        <center><a href="showData">OK</a></center>
     </body>
 </html>
