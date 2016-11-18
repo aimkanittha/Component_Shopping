@@ -55,18 +55,20 @@ public class AddtoShoppingCartServlet extends HttpServlet {
         scjpa = new ShoppingCartJpaController(emf);
         MemberShop member = ((MemberShop) request.getSession().getAttribute("member"));
         ShoppingCart scart;
-        synchronized(getServletContext()){
+        synchronized(request){
             EntityManager em = emf.createEntityManager();
             em.getTransaction().begin();
             try{
                 DvdData dvdData = em.find(DvdData.class, dvdId);
-                em.lock(dvdData, LockModeType.PESSIMISTIC_WRITE);
-                em.persist(dvdData);
+                System.out.println("TRY Success");
                 if(dvdData.getDvdDataquantity()<qty){
                     response.sendRedirect("showData");
+                    em.getTransaction().commit();
                     em.close();
                     return;
                 }
+                em.lock(dvdData, LockModeType.PESSIMISTIC_WRITE);
+                em.persist(dvdData);
                 if( scjpa.findMemberCart(em,member, dvdData)==null ){
                     scart = new ShoppingCart();
                     scart.setShoppingCartmember(member);
@@ -82,9 +84,11 @@ public class AddtoShoppingCartServlet extends HttpServlet {
                 }
                 em.getTransaction().commit();
             }catch( Exception e){
+                System.out.println("TRY Success");
                 em.getTransaction().rollback();
             }finally{
                 em.close();
+                response.sendRedirect("showData");
             }
             //
             //
@@ -117,7 +121,7 @@ public class AddtoShoppingCartServlet extends HttpServlet {
 //                }
 //            }
         }
-        response.sendRedirect("showData");
+//        response.sendRedirect("showData");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
