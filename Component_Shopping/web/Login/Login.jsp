@@ -18,7 +18,7 @@
             <input type="submit"/><br>
         </form>
         <%
-            if((Integer) (request.getSession().getAttribute("userinvalid")) ==1)
+            if(request.getSession().getAttribute("userinvalid") != null && (Integer) (request.getSession().getAttribute("userinvalid")) ==1)
                 out.print("Username Or Password is incorrect! ");
             %>
     </body>
