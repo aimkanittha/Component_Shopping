@@ -24,7 +24,7 @@
     </head>
     <body>
         <% MemberShop member = (MemberShop)request.getSession().getAttribute("member"); %>
-       สวัสดีคุณ <%= member.getMemberfirstname() %> <%= member.getMemberlastname() %> <a href="logout">Log Out</a>
+       สวัสดีคุณ <%= member.getMemberfirstname() %> <%= member.getMemberlastname() %> <a href="Logout">Log Out</a>
         <form action="showData" method="POST">
             <center><h1>Welcome to Shopping DVD</h1></center>
             <center><h2>DVD Catalog</h2></center>
@@ -66,7 +66,7 @@
                             out.println(list.get(i).getDvdDataquantity());
                         out.println("</td>");
                         out.println("<td>");
-                            out.println("<input type='number' name='Quautity"+list.get(i).getDvdDataid()+"' value='1' min='1' max='100'  />");
+                            out.println("<input type='number' name='quantity"+list.get(i).getDvdDataid()+"' value='1' min='1' max='"+list.get(i).getDvdDataquantity()+"'  />");
                         out.println("</td>");
                         out.println("<td>");
                             out.println("<button style='width:100%' type='submit' name='action' onclick=\"form.action='addItem';\" value='"+list.get(i).getDvdDataid()+"'>AddToCard </button>");

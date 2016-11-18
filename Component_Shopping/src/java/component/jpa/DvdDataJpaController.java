@@ -19,6 +19,7 @@ import java.util.List;
 import component.model.ShoppingBillDetail;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.LockModeType;
 
 /**
  *
@@ -34,6 +35,7 @@ public class DvdDataJpaController implements Serializable {
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
+    
 
     public void create(DvdData dvdData) {
         if (dvdData.getShoppingCartList() == null) {

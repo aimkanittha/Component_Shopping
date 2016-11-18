@@ -56,7 +56,7 @@ public class ShowData extends HttpServlet {
 //        
 //        bill_list = bill.findAll();
 
-        List<DvdData> dvd_list = (List<DvdData>)em.createNamedQuery("DvdData.findAll").getResultList();
+        List<DvdData> dvd_list = (List<DvdData>)em.createNamedQuery("DvdData.findQtyOnHand").getResultList();
 
 //        try (PrintWriter out = response.getWriter()) {
 //        

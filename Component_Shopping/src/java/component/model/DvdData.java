@@ -40,6 +40,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "DvdData.findByDvdDataname", query = "SELECT d FROM DvdData d WHERE d.dvdDataname = :dvdDataname")
     , @NamedQuery(name = "DvdData.findByDvdDataprice", query = "SELECT d FROM DvdData d WHERE d.dvdDataprice = :dvdDataprice")
     , @NamedQuery(name = "DvdData.findByDvdDatayear", query = "SELECT d FROM DvdData d WHERE d.dvdDatayear = :dvdDatayear")
+    , @NamedQuery(name = "DvdData.findQtyOnHand", query = "SELECT d FROM DvdData d WHERE d.dvdDataquantity > 0")
     , @NamedQuery(name = "DvdData.findByDvdDataquantity", query = "SELECT d FROM DvdData d WHERE d.dvdDataquantity = :dvdDataquantity")})
 public class DvdData implements Serializable {
 

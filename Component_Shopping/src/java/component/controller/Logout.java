@@ -5,8 +5,6 @@
  */
 package component.controller;
 
-import component.dao.MemberTable;
-import component.dao.MemberTableLocal;
 import component.model.MemberShop;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,13 +12,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author wachirapong
  */
-public class LoginController extends HttpServlet {
-    MemberTableLocal memberTable;
+public class Logout extends HttpServlet {
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -32,36 +31,11 @@ public class LoginController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html");
-        MemberShop memberSession = (MemberShop)request.getSession().getAttribute("member");
-        if( memberSession != null ){
-            response.sendRedirect("showData");
-            return;
-        }
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        if( username != null ){
-            memberTable = new MemberTable();
-            MemberShop member;
-            member = memberTable.getMemberByUsername(username);
-            if( member != null ){
-                if( password.equals(member.getMemberpassword()) ){
-                    request.getSession().setAttribute("member", member);
-                    response.sendRedirect("showData");
-                }else{
-                    request.getSession().setAttribute("userinvalid", 1);
-                    request.getRequestDispatcher("Login/Login.jsp").forward(request, response);
-                }
-            }else{
-                request.getSession().setAttribute("userinvalid", 1);
-                request.getRequestDispatcher("Login/Login.jsp").forward(request, response);
-            }
-        }else{
-            request.getSession().setAttribute("userinvalid", 0);
-            request.getRequestDispatcher("Login/Login.jsp").forward(request, response);
-        }
-        
-        
+        response.setContentType("text/html;charset=UTF-8");
+        HttpSession session = request.getSession();
+        session.removeAttribute("member");
+        response.sendRedirect("LoginController");
+//        return;
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
