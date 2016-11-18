@@ -47,6 +47,10 @@ public class AddtoShoppingCartServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         rand = new Random();
+        if(request.getParameter("action") == null || request.getSession().getAttribute("member")==null){
+            response.sendRedirect("showData");
+            return;
+        }
         int dvdId = Integer.parseInt((String) request.getParameter("action") );
         int qty = Integer.parseInt((String) request.getParameter("quantity"+dvdId) );
 //        ShoppingBillJpaController spbjpa = new ShoppingBillJpaController(emf);
@@ -62,9 +66,9 @@ public class AddtoShoppingCartServlet extends HttpServlet {
                 DvdData dvdData = em.find(DvdData.class, dvdId);
                 System.out.println("TRY Success");
                 if(dvdData.getDvdDataquantity()<qty){
-                    response.sendRedirect("showData");
                     em.getTransaction().commit();
-                    em.close();
+//                    em.close();
+                    response.sendRedirect("showData");
                     return;
                 }
                 em.lock(dvdData, LockModeType.PESSIMISTIC_WRITE);
@@ -88,7 +92,7 @@ public class AddtoShoppingCartServlet extends HttpServlet {
                 em.getTransaction().rollback();
             }finally{
                 em.close();
-                response.sendRedirect("showData");
+//                response.sendRedirect("showData");
             }
             //
             //
@@ -121,7 +125,7 @@ public class AddtoShoppingCartServlet extends HttpServlet {
 //                }
 //            }
         }
-//        response.sendRedirect("showData");
+        response.sendRedirect("showData");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

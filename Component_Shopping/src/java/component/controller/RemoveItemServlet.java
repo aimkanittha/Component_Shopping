@@ -39,6 +39,10 @@ public class RemoveItemServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        if(request.getParameter("remove") == null || request.getSession().getAttribute("member")==null){
+            response.sendRedirect("showData");
+            return;
+        }
         MemberShop member = ((MemberShop) request.getSession().getAttribute("member"));
         int dvdId = Integer.parseInt((String) request.getParameter("remove") );
 //        synchronized(request){
