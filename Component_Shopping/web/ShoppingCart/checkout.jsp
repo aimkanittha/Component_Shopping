@@ -7,6 +7,7 @@
 <%@page import="component.model.MemberShop"%>
 <%@page import="component.model.ShoppingBillDetail"%>
 <%@page import="java.util.List"%>
+<%@include file="../index.html" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -25,8 +26,8 @@
             if(shoppingBillSize > 0){
                out.println("<center><h2> THANK YOU FOR YOUR PURCHASE </h2></center>");
                out.println("<center><h5> Item List </h5></center>");
-               out.println("<table border='1'>");
-               out.println("<tr><th>No.</th>");
+               out.println("<table border='1px'>");
+               out.println("<tr class='first'><th>No.</th>");
                out.println("<th>DVD Id</th>");
                out.println("<th>DVD Name</th>");
                out.println("<th>Rate</th>");
@@ -54,7 +55,7 @@
                             out.println( tPrice  );
                         out.println("</td>");
                         out.println("<td>");
-                            out.println("<input type='text' name='Quautity"+i+"' value='"+shoppingBill.get(i).getShoppingBillDetaildvdQty()+"' readonly />");
+                            out.println("<input style='width:100%;margin:10px auto;' type='text' name='Quautity"+i+"' value='"+shoppingBill.get(i).getShoppingBillDetaildvdQty()+"' readonly />");
                         out.println("</td>");
                         out.println("</tr>");
                }

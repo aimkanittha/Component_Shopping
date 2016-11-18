@@ -6,14 +6,47 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <title>TODO supply a title</title>
+        <title>Component Shopping</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <div>TODO write content</div>
-        <form action="ShowShoppingCart.jsp" method="get">
-            <a href="checkOut">Add item</a>
-        </form>
+        <style>
+        body{
+          font-family: 'Helvetica Neue', Helvetica, Arial;
+          font-size: 14px;
+          line-height: 20px;
+          font-weight: 400;
+          color: #3b3b3b;
+          -webkit-font-smoothing: antialiased;
+          font-smoothing: antialiased;
+          background: #e9e9e9;
+        }
+        table{
+          margin: 0 0 40px 0;
+          width: 100%;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+          display: table;
+          border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        tr.first>th{
+            background:  #ea6153;
+        }
+        tr.second>th{
+            background:  #9999ff;
+        }
+        tr{
+          display: table-row;
+          background: #f6f6ff
+        }
+        td{
+          padding: 6px 12px;
+          display: table-cell;
+        }
+        </style>
     </body>
-</html>
+</html> 
+

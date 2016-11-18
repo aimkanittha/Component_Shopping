@@ -3,7 +3,7 @@
     Created on : Nov 17, 2016, 3:38:52 AM
     Author     : wachirapong
 --%>
-
+<%@include file="../index.html" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -22,4 +22,5 @@
                 out.print("Username Or Password is incorrect! ");
             %>
     </body>
+    
 </html>
